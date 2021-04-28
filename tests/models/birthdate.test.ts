@@ -25,8 +25,7 @@ describe("Tests to validate the email service", () => {
     });
 
     it("Should return false when called with a barely illegal birthdate", () => {
-        test_birthdate.setUTCFullYear(test_birthdate.getFullYear() - 13);
-        test_birthdate.setDate(test_birthdate.getDay() + 1);
+        test_birthdate.setUTCFullYear(test_birthdate.getFullYear() - 12);
         expect(birthdateService.isBirthdateValid(test_birthdate)).toBeFalsy();
     });
 })

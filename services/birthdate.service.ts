@@ -1,6 +1,6 @@
 export class BirthdateService {
 
     isBirthdateValid(birthdate: Date): boolean {
-        throw new Error("Not implemented yet");
+        return (new Date()).getUTCFullYear() - birthdate.getUTCFullYear() >= 13;
     }
 }
