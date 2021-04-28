@@ -1,3 +1,5 @@
+import {EmailService} from '../../services/email.service';
+
 describe("Tests to validate the email service", () => {
 
     let emailService: EmailService;
@@ -14,12 +16,7 @@ describe("Tests to validate the email service", () => {
         expect(emailService.isEmailValid("email_address")).toBeFalsy();
     });
 
-    it("Should return true when called with an empty string", () => {
+    it("Should return false when called with an empty string", () => {
         expect(emailService.isEmailValid("")).toBeFalsy();
-    });
-
-    it("Should return true when called with a valid email", () => {
-        // @ts-ignore
-        expect(emailService.isEmailValid(null)).toThrowError("Invalid type");
     });
 })
