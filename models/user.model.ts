@@ -6,7 +6,7 @@ interface UserProps {
 
 }
 
-export class User implements UserProps{
+export class UserModel implements UserProps{
     birth_date: Date;
     email: string;
     firstName: string;
