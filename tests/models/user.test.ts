@@ -1,4 +1,4 @@
-import {UserModel} from '../models/user.model';
+import {UserModel} from '../../models/user.model';
 
 
 describe('tests the validation for th user props', () => {
@@ -8,7 +8,7 @@ describe('tests the validation for th user props', () => {
     beforeEach(() => {
         const date_less_14_years: Date = new Date();
         date_less_14_years.setUTCFullYear(date_less_14_years.getFullYear() - 14);
-        user = new UserModel(date_less_14_years, "pomme@pomme.fr", "jean", "tom" );
+        user = new UserModel(date_less_14_years, "pomme@pomme.fr", "jean", "tom", "userPassword");
     });
 
     it('Should return false because email is not an email', () => {
