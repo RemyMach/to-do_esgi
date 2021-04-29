@@ -27,17 +27,28 @@ export class ToDoListModel implements ToDoListProps
         return true;
     }
 
-    private async getLastItemDateTime(): Promise<Date>
+    private async getLastItemDateTime(): Promise<Date | null>
     {
-        return this.items[this.items.length - 1].createdAt;
+        if(await this.getNumberOfItem() === 0){
+            return null;
+        }
+        return this.items[await this.getNumberOfItem() - 1].createdAt;
+    }
+
+    public async getNumberOfItem(): Promise<number>
+    {
+        return this.items.length;
     }
 
     private async checkLastTimeInsertTime(): Promise<boolean>
     {
         const currentDateTime = new Date();
+        const lastItemDateTime = await this.getLastItemDateTime();
+        if(lastItemDateTime === null){
+            return true;
+        }
         currentDateTime.setMinutes(currentDateTime.getMinutes() - 30);
-        console.log(currentDateTime);
-        return await this.getLastItemDateTime() < currentDateTime;
+        return lastItemDateTime < currentDateTime;
     }
 
     private async sendMail(): Promise<void>
