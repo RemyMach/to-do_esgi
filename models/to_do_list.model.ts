@@ -4,7 +4,7 @@ interface ToDoListProps {
     items: Item[];
 }
 
-export class ToDoList implements ToDoListProps
+export class ToDoListModel implements ToDoListProps
 {
     items: Item[];
 
