@@ -1,4 +1,4 @@
-import {ToDoListModel} from "../../models/to_do_list.model";
+import {ToDoListModel} from "../../models/toDoList.model";
 import {ItemModel} from "../../models/item.model";
 
 describe("Test to validate ToDoList model and methods", () => {
