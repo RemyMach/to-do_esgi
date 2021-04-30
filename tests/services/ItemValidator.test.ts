@@ -13,10 +13,8 @@ describe("Tests to validate the email service", () => {
     });
 
     it("Should return false when content have more than 1000 characters", () => {
-        let word: string = "";
-        for(let i = 0; i <1001; i++) {
-            word += 'a';
-        }
+
+        const word: string = "a".repeat(1001);
         expect(itemValidatorService.isContentValid(word)).toBeFalsy();
     });
 
@@ -26,10 +24,8 @@ describe("Tests to validate the email service", () => {
     });
 
     it("Should return true when content have length > or equal to 1000 characters", () => {
-        let word: string = "";
-        for(let i = 0; i <1000; i++) {
-            word += 'a';
-        }
+
+        const word: string = "a".repeat(1000);
         expect(itemValidatorService.isContentValid(word)).toBeTruthy();
     });
 
