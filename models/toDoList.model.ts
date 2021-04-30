@@ -1,13 +1,17 @@
 import {ItemModel} from "./item.model";
+import {ToDoListValidatorService} from "../services/toDoListValidator.service";
 
 export interface ToDoListProps {
-    items: ItemModel[]
+    toDoListValidatorService: ToDoListValidatorService;
+    items: ItemModel[];
 }
 
 export class ToDoListModel implements ToDoListProps{
+    toDoListValidatorService: ToDoListValidatorService;
     items: ItemModel[];
 
     constructor() {
+        this.toDoListValidatorService = new ToDoListValidatorService();
         this.items = [];
     }
 
@@ -21,48 +25,22 @@ export class ToDoListModel implements ToDoListProps{
 
     }
     */
-    public async addNewItem(item: ItemModel): Promise<boolean>
+    public addNewItem(item: ItemModel): ItemModel | null
     {
-        if(this.items.length >= 10 || !await this.checkLastTimeInsertTime()) {
-            return false;
+        if(this.toDoListValidatorService.itemsIsNotFull(this.items) &&
+            this.toDoListValidatorService.checkLastItemInsertTime(this.items))
+        {
+            this.items.push(item);
+            return item;
         }
-
-        this.items.push(item);
-
-        if(this.items.length === 8) {
-            await this.sendMail();
-        }
-
-        return true;
-    }
-
-    private async getLastItemDateTime(): Promise<Date | null>
-    {
-        if(await this.getNumberOfItem() === 0){
+        else{
             return null;
         }
-        return this.items[await this.getNumberOfItem() - 1].createdAt;
     }
 
-    public async getNumberOfItem(): Promise<number>
+    private sendMail(): void
     {
-        return this.items.length;
-    }
-
-    private async checkLastTimeInsertTime(): Promise<boolean>
-    {
-        const currentDateTime = new Date();
-        const lastItemDateTime = await this.getLastItemDateTime();
-        if(lastItemDateTime === null){
-            return true;
-        }
-        currentDateTime.setMinutes(currentDateTime.getMinutes() - 30);
-        return lastItemDateTime < currentDateTime;
-    }
-
-    private async sendMail(): Promise<void>
-    {
-        // Need to be implemented
+        // Need implement "to be implemented" exception
     }
 
     /*
