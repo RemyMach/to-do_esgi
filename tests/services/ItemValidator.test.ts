@@ -12,7 +12,7 @@ describe("Tests to validate the email service", () => {
         expect(itemValidatorService.isNameNotEmpty("")).toBeFalsy();
     });
 
-    it("Should return false when content have more than 1000 carracters", () => {
+    it("Should return false when content have more than 1000 characters", () => {
         let word: string = "";
         for(let i = 0; i <1001; i++) {
             word += 'a';
@@ -25,7 +25,7 @@ describe("Tests to validate the email service", () => {
         expect(itemValidatorService.isContentValid("")).toBeFalsy();
     });
 
-    it("Should return true when content have legnth > or equal to 1000 carracters", () => {
+    it("Should return true when content have length > or equal to 1000 characters", () => {
         let word: string = "";
         for(let i = 0; i <1000; i++) {
             word += 'a';

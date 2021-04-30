@@ -1,6 +1,5 @@
 import {ItemModel} from '../../models/item.model';
 import {ItemValidatorService} from '../../services/itemValidator.service';
-import {StringEmptyService} from "../../services/stringEmpty.service";
 
 
 jest.mock('../../services/itemValidator.service');
