@@ -1,4 +1,4 @@
-import {ItemValidatorService} from '../services/itemValidator.service'
+import {ItemValidatorService} from '../services/itemValidator.service';
 
 interface ItemProps {
     name: string;

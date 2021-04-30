@@ -1,18 +1,18 @@
-import {Item} from "./item.model";
+import {ItemModel} from "./item.model";
 
 interface ToDoListProps {
-    items: Item[];
+    items: ItemModel[];
 }
 
 export class ToDoListModel implements ToDoListProps
 {
-    items: Item[];
+    items: ItemModel[];
 
     constructor() {
         this.items = [];
     }
 
-    public async addNewItem(item: Item): Promise<boolean>
+    public async addNewItem(item: ItemModel): Promise<boolean>
     {
         if(this.items.length >= 10 || !await this.checkLastTimeInsertTime()) {
             return false;
