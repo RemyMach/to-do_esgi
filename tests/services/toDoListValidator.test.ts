@@ -86,4 +86,18 @@ describe("Tests to validate the toDoList service", () => {
         expect(toDoList.items[0]).toStrictEqual(newTestItem1);
         expect(toDoList.items[1]).toStrictEqual(testItem2);
     });
+
+    it("deleteItemByName should return the same item list if the item name doesn't exist", () => {
+        toDoList.items = new Array(5).fill(newItem);
+        const testItem = new ItemModel("Other test", new Date(19, 1, 2000), "You");
+        expect(toDoListValidatorService.deleteItemByName(testItem.name, toDoList.items)).toStrictEqual(toDoList.items);
+    });
+
+    it("updateItemContent should only delete testItem1", () => {
+        const testItem1 = new ItemModel("Other test", new Date(19, 1, 2000), "You");
+        const testItem2 = new ItemModel("test again", new Date(19, 1, 2000), "You again");
+        toDoList.items = [testItem1, testItem2];
+
+        expect(toDoListValidatorService.deleteItemByName(testItem1.name, toDoList.items)).toStrictEqual([testItem2]);
+    });
 })

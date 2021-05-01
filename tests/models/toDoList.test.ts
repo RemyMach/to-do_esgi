@@ -124,7 +124,6 @@ describe("Test to validate ToDoList addNewItem method", () => {
     });
 
     it("item list should be updated if the item name exist in the list", async () => {
-        toDoList.items = new Array(1).fill(newItem);
         ToDoListValidatorService.prototype.searchItemByName = jest.fn().mockImplementation(() => {
             return newItem;
         });
@@ -136,5 +135,19 @@ describe("Test to validate ToDoList addNewItem method", () => {
             return null;
         });
         expect(toDoList.updateItem(newItem.name, "new content")).toBe(null);
+    });
+
+    it("item list should be delete if the item name exist in the list", async () => {
+        ToDoListValidatorService.prototype.searchItemByName = jest.fn().mockImplementation(() => {
+            return newItem;
+        });
+        expect(toDoList.deleteItem(newItem.name)).toBeTruthy();
+    });
+
+    it("item list shouldn't be updated if the item name exist in the list", async () => {
+        ToDoListValidatorService.prototype.searchItemByName = jest.fn().mockImplementation(() => {
+            return null;
+        });
+        expect(toDoList.deleteItem(newItem.name)).toBeFalsy();
     });
 })
