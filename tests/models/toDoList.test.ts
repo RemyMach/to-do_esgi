@@ -2,6 +2,7 @@ import {ToDoListModel} from "../../models/toDoList.model";
 import {ItemModel} from "../../models/item.model";
 import {ToDoListValidatorService} from "../../services/toDoListValidator.service";
 import {DateService} from "../../services/date.service";
+import {EmailService} from "../../services/email.service";
 
 describe("Test to validate ToDoList addNewItem method", () => {
 
@@ -26,6 +27,9 @@ describe("Test to validate ToDoList addNewItem method", () => {
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
             return false;
         });
+        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
+            return true;
+        });
         expect(to_do_list_model.addNewItem(newItem)).toBe(newItem);
     });
 
@@ -40,6 +44,9 @@ describe("Test to validate ToDoList addNewItem method", () => {
             return true;
         });
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
+            return true;
+        });
+        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
             return true;
         });
         expect(to_do_list_model.addNewItem(newItem)).toBe(newItem);
@@ -58,6 +65,9 @@ describe("Test to validate ToDoList addNewItem method", () => {
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
             return true;
         });
+        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
+            return true;
+        });
         expect(to_do_list_model.addNewItem(newItem)).toBe(null);
     });
 
@@ -72,6 +82,9 @@ describe("Test to validate ToDoList addNewItem method", () => {
             return false;
         });
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
+            return true;
+        });
+        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
             return true;
         });
         expect(to_do_list_model.addNewItem(newItem)).toBe(null);
@@ -89,6 +102,9 @@ describe("Test to validate ToDoList addNewItem method", () => {
         });
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
             return false;
+        });
+        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
+            return true;
         });
         expect(to_do_list_model.addNewItem(newItem)).toBe(null);
     });
