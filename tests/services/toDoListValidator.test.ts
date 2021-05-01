@@ -59,4 +59,13 @@ describe("Tests to validate the toDoList service", () => {
         toDoList.items = new Array(5).fill(newItem);
         expect(toDoListValidatorService.newItemNameIsUnique(toDoList.items, newItem)).toBeFalsy();
     });
+
+    it("searchItemByName should return newItem if newItem is in item list", () => {
+        toDoList.items = new Array(1).fill(newItem);
+        expect(toDoListValidatorService.searchItemByName(newItem.name, toDoList.items)).toBe(newItem);
+    });
+
+    it("searchItemByName should return null if newItem isn't in item list", () => {
+        expect(toDoListValidatorService.searchItemByName(newItem.name, toDoList.items)).toBe(undefined);
+    });
 })

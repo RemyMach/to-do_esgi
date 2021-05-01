@@ -6,11 +6,11 @@ import {EmailService} from "../../services/email.service";
 
 describe("Test to validate ToDoList addNewItem method", () => {
 
-    let to_do_list_model: ToDoListModel;
+    let toDoList: ToDoListModel;
     let newItem: ItemModel;
 
     beforeEach(() => {
-        to_do_list_model = new ToDoListModel();
+        toDoList = new ToDoListModel();
         newItem = new ItemModel("Test", new Date(19, 1, 2000), "Me");
     });
 
@@ -30,7 +30,7 @@ describe("Test to validate ToDoList addNewItem method", () => {
         EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
             return true;
         });
-        expect(to_do_list_model.addNewItem(newItem)).toBe(newItem);
+        expect(toDoList.addNewItem(newItem)).toBe(newItem);
     });
 
     it("If item list is not empty but the new item pass all condition he should be added", async () => {
@@ -49,7 +49,7 @@ describe("Test to validate ToDoList addNewItem method", () => {
         EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
             return true;
         });
-        expect(to_do_list_model.addNewItem(newItem)).toBe(newItem);
+        expect(toDoList.addNewItem(newItem)).toBe(newItem);
     });
 
     it("If item list is full the new item shouldn't be added", async () => {
@@ -68,7 +68,7 @@ describe("Test to validate ToDoList addNewItem method", () => {
         EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
             return true;
         });
-        expect(to_do_list_model.addNewItem(newItem)).toBe(null);
+        expect(toDoList.addNewItem(newItem)).toBe(null);
     });
 
     it("If newItem name is not unique the new item shouldn't be added", async () => {
@@ -87,7 +87,7 @@ describe("Test to validate ToDoList addNewItem method", () => {
         EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
             return true;
         });
-        expect(to_do_list_model.addNewItem(newItem)).toBe(null);
+        expect(toDoList.addNewItem(newItem)).toBe(null);
     });
 
     it("If there is not 30 minutes between the last item and the newItem he shouldn't be added", async () => {
@@ -106,6 +106,13 @@ describe("Test to validate ToDoList addNewItem method", () => {
         EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
             return true;
         });
-        expect(to_do_list_model.addNewItem(newItem)).toBe(null);
+        expect(toDoList.addNewItem(newItem)).toBe(null);
+    });
+
+    it("getItem return newItem", async () => {
+        ToDoListValidatorService.prototype.searchItemByName = jest.fn().mockImplementation(() => {
+            return newItem;
+        });
+        expect(toDoList.getItem(newItem.name)).toBe(newItem);
     });
 })
