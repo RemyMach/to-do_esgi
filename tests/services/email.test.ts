@@ -19,4 +19,8 @@ describe("Tests to validate the email service", () => {
     it("Should return false when called with an empty string", () => {
         expect(emailService.isEmailValid("")).toBeFalsy();
     });
+
+    it("Should throw error", () => {
+        expect(() => {emailService.sendEmail("")}).toThrow(Error);
+    });
 })
