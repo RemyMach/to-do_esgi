@@ -22,12 +22,6 @@ export class ToDoListModel implements ToDoListProps{
         this.items = [];
     }
 
-    /*
-        TODO implémenter les 4 méthodes du dessous avec leur test sans oublier la vérification
-        du name unique et du fait qu'on ai pas plus de 10 Items. Pour les vérification mieux d'utiliser
-        des services que tu peux mocker pour les tests
-    */
-
     public getItem(name: string): ItemModel | null {
         return this.toDoListValidatorService.searchItemByName(name, this.items);
     }
@@ -52,11 +46,6 @@ export class ToDoListModel implements ToDoListProps{
         else{
             return null;
         }
-    }
-
-    private sendMail(): void
-    {
-        // Need implement "to be implemented" exception
     }
 
     /*
