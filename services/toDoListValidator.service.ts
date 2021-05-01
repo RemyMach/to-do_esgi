@@ -33,5 +33,14 @@ export class ToDoListValidatorService
             return item[0];
         }
     }
+
+    updateItemContent(name: string, content: string, items: ItemModel[]): ItemModel[] {
+        return items.map(item => {
+            if(item.name === name){
+                item.content = content;
+            }
+            return item;
+        });
+    }
 }
 

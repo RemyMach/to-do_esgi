@@ -47,13 +47,16 @@ export class ToDoListModel implements ToDoListProps{
             return null;
         }
     }
-
-    /*
-    update(item: Item) {
-
+    public updateItem(name: string, content: string) : ItemModel | null
+    {
+        if(this.toDoListValidatorService.searchItemByName(name, this.items) === null){
+            return null;
+        }
+        this.items = this.toDoListValidatorService.updateItemContent(name, content, this.items);
+        return this.toDoListValidatorService.searchItemByName(name, this.items);
     }
 
-    delete(item: Item) {
+    /*delete(item: Item) {
 
     }*/
 
