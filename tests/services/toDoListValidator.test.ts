@@ -66,7 +66,7 @@ describe("Tests to validate the toDoList service", () => {
     });
 
     it("searchItemByName should return null if newItem isn't in item list", () => {
-        expect(toDoListValidatorService.searchItemByName(newItem.name, toDoList.items)).toBe(undefined);
+        expect(toDoListValidatorService.searchItemByName("Something that doesn't exist", toDoList.items)).toBe(undefined);
     });
 
     it("updateItemContent should return the same item list if the item name doesn't exist", () => {
