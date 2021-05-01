@@ -9,7 +9,7 @@ export class ItemValidatorService {
     }
 
     isContentValid(content: string): boolean {
-        return content.length > 0 && content.length <= 1000;
+        return this.stringEmptyService.isStringNotEmpty(content) && content.length <= 1000;
     }
 
     isNameNotEmpty(name: string): boolean {
