@@ -12,6 +12,12 @@ describe("Test to validate ToDoList addNewItem method", () => {
     beforeEach(() => {
         toDoList = new ToDoListModel();
         newItem = new ItemModel("Test", new Date(19, 1, 2000), "Me");
+        ToDoListValidatorService.prototype.getNumberOfItem = jest.fn().mockImplementation(() => {
+            return 0;
+        });
+        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
+            return null;
+        });
     });
 
     it("If item list is empty, the new item should be added", async () => {
@@ -26,9 +32,6 @@ describe("Test to validate ToDoList addNewItem method", () => {
         });
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
             return false;
-        });
-        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
-            return true;
         });
         expect(toDoList.addNewItem(newItem)).toBe(newItem);
     });
@@ -46,8 +49,24 @@ describe("Test to validate ToDoList addNewItem method", () => {
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
             return true;
         });
-        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
+        expect(toDoList.addNewItem(newItem)).toBe(newItem);
+    });
+
+    it("If item list is not empty but the new item pass all condition he should be added and with 8 items in the list an email should be sended", async () => {
+        ToDoListValidatorService.prototype.itemsIsEmpty = jest.fn().mockImplementation(() => {
+            return false;
+        });
+        ToDoListValidatorService.prototype.itemsIsNotFull = jest.fn().mockImplementation(() => {
             return true;
+        });
+        ToDoListValidatorService.prototype.newItemNameIsUnique = jest.fn().mockImplementation(() => {
+            return true;
+        });
+        DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
+            return true;
+        });
+        ToDoListValidatorService.prototype.getNumberOfItem = jest.fn().mockImplementation(() => {
+            return 8;
         });
         expect(toDoList.addNewItem(newItem)).toBe(newItem);
     });
@@ -63,9 +82,6 @@ describe("Test to validate ToDoList addNewItem method", () => {
             return true;
         });
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
-            return true;
-        });
-        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
             return true;
         });
         expect(toDoList.addNewItem(newItem)).toBe(null);
@@ -84,9 +100,6 @@ describe("Test to validate ToDoList addNewItem method", () => {
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
             return true;
         });
-        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
-            return true;
-        });
         expect(toDoList.addNewItem(newItem)).toBe(null);
     });
 
@@ -102,9 +115,6 @@ describe("Test to validate ToDoList addNewItem method", () => {
         });
         DateService.prototype.isItemCreationDateStamped = jest.fn().mockImplementation(() => {
             return false;
-        });
-        EmailService.prototype.sendEmail = jest.fn().mockImplementation(() => {
-            return true;
         });
         expect(toDoList.addNewItem(newItem)).toBe(null);
     });
