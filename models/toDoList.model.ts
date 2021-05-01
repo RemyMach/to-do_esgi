@@ -1,17 +1,21 @@
 import {ItemModel} from "./item.model";
 import {ToDoListValidatorService} from "../services/toDoListValidator.service";
+import {DateService} from "../services/date.service";
 
 export interface ToDoListProps {
     toDoListValidatorService: ToDoListValidatorService;
+    dateService: DateService;
     items: ItemModel[];
 }
 
 export class ToDoListModel implements ToDoListProps{
     toDoListValidatorService: ToDoListValidatorService;
+    dateService: DateService;
     items: ItemModel[];
 
     constructor() {
         this.toDoListValidatorService = new ToDoListValidatorService();
+        this.dateService = new DateService();
         this.items = [];
     }
 
@@ -25,13 +29,19 @@ export class ToDoListModel implements ToDoListProps{
 
     }
     */
-    public addNewItem(item: ItemModel): ItemModel | null
+    public addNewItem(newItem: ItemModel): ItemModel | null
     {
+        if(this.toDoListValidatorService.itemsIsEmpty(this.items)){
+            this.items.push(newItem);
+            return newItem;
+        }
+
         if(this.toDoListValidatorService.itemsIsNotFull(this.items) &&
-            this.toDoListValidatorService.checkLastItemInsertTime(this.items))
+            this.toDoListValidatorService.newItemNameIsUnique(this.items, newItem) &&
+            this.dateService.isItemCreationDateStamped(this.toDoListValidatorService.getLastItem(this.items), newItem))
         {
-            this.items.push(item);
-            return item;
+            this.items.push(newItem);
+            return newItem;
         }
         else{
             return null;
