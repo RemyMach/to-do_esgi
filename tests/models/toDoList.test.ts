@@ -109,10 +109,25 @@ describe("Test to validate ToDoList addNewItem method", () => {
         expect(toDoList.addNewItem(newItem)).toBe(null);
     });
 
-    it("getItem return newItem", async () => {
+    it("getItem return newItem if he exist", async () => {
         ToDoListValidatorService.prototype.searchItemByName = jest.fn().mockImplementation(() => {
             return newItem;
         });
         expect(toDoList.getItem(newItem.name)).toBe(newItem);
+    });
+
+    it("getItem don't return newItem if he doesn't exist", async () => {
+        ToDoListValidatorService.prototype.searchItemByName = jest.fn().mockImplementation(() => {
+            return null;
+        });
+        expect(toDoList.getItem(newItem.name)).toBe(null);
+    });
+
+    it("item list should be updated if the item name exist in the list", async () => {
+        toDoList.items = new Array(1).fill(newItem);
+        ToDoListValidatorService.prototype.searchItemByName = jest.fn().mockImplementation(() => {
+            return newItem;
+        });
+        expect(toDoList.updateItem(newItem.name, "new content")).toBe(newItem);
     });
 })

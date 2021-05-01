@@ -68,4 +68,22 @@ describe("Tests to validate the toDoList service", () => {
     it("searchItemByName should return null if newItem isn't in item list", () => {
         expect(toDoListValidatorService.searchItemByName(newItem.name, toDoList.items)).toBe(undefined);
     });
+
+    it("updateItemContent should return the same item list if the item name doesn't exist", () => {
+        toDoList.items = new Array(5).fill(newItem);
+        const testItem = new ItemModel("Other test", new Date(19, 1, 2000), "You");
+        expect(toDoListValidatorService.updateItemContent(testItem.name, "En fait non", toDoList.items)).toStrictEqual(toDoList.items);
+    });
+
+    it("updateItemContent should only modify testItem1 content", () => {
+        const testItem1 = new ItemModel("Other test", new Date(19, 1, 2000), "You");
+        const testItem2 = new ItemModel("test again", new Date(19, 1, 2000), "You again");
+        toDoList.items = [testItem1, testItem2];
+
+        toDoList.items = toDoListValidatorService.updateItemContent("You", "test", toDoList.items);
+        const newTestItem1 = new ItemModel("test", new Date(19, 1, 2000), "You");
+
+        expect(toDoList.items[0]).toStrictEqual(newTestItem1);
+        expect(toDoList.items[1]).toStrictEqual(testItem2);
+    });
 })
