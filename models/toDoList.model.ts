@@ -28,10 +28,10 @@ export class ToDoListModel implements ToDoListProps{
         des services que tu peux mocker pour les tests
     */
 
-    /*get(name: string): ItemModel {
-
+    public getItem(name: string): ItemModel {
+        return this.toDoListValidatorService.searchItemByName(name, this.items);
     }
-    */
+
     public addNewItem(newItem: ItemModel): ItemModel | null
     {
         if(this.toDoListValidatorService.itemsIsEmpty(this.items)){

@@ -23,5 +23,9 @@ export class ToDoListValidatorService
     newItemNameIsUnique(items: ItemModel[], newItem: ItemModel) {
         return items.filter(item => item.name === newItem.name).length === 0;
     }
+
+    searchItemByName(name: string, items: ItemModel[]): ItemModel{
+        return items.filter(item => item.name === name)[0];
+    }
 }
 
