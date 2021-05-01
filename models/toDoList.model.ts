@@ -28,7 +28,7 @@ export class ToDoListModel implements ToDoListProps{
         des services que tu peux mocker pour les tests
     */
 
-    public getItem(name: string): ItemModel {
+    public getItem(name: string): ItemModel | null {
         return this.toDoListValidatorService.searchItemByName(name, this.items);
     }
 

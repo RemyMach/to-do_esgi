@@ -24,8 +24,14 @@ export class ToDoListValidatorService
         return items.filter(item => item.name === newItem.name).length === 0;
     }
 
-    searchItemByName(name: string, items: ItemModel[]): ItemModel{
-        return items.filter(item => item.name === name)[0];
+    searchItemByName(name: string, items: ItemModel[]): ItemModel | null {
+        const item = items.filter(item => item.name === name);
+        if(item === undefined){
+            return null;
+        }
+        else {
+            return item[0];
+        }
     }
 }
 
