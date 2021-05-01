@@ -42,5 +42,11 @@ export class ToDoListValidatorService
             return item;
         });
     }
+
+    deleteItemByName(name: string, items: ItemModel[]): ItemModel[] {
+        return items.filter(item => {
+            return item.name !== name;
+        });
+    }
 }
 

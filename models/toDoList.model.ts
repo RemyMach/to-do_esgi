@@ -56,8 +56,12 @@ export class ToDoListModel implements ToDoListProps{
         return this.toDoListValidatorService.searchItemByName(name, this.items);
     }
 
-    /*delete(item: Item) {
-
-    }*/
+    public deleteItem(name: string): boolean {
+        if(this.toDoListValidatorService.searchItemByName(name, this.items) === null){
+            return false;
+        }
+        this.items = this.toDoListValidatorService.deleteItemByName(name, this.items);
+        return true;
+    }
 
 }
