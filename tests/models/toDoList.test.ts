@@ -50,6 +50,7 @@ describe("Test to validate ToDoList addNewItem method", () => {
             return true;
         });
         expect(toDoList.addNewItem(newItem)).toBe(newItem);
+        expect(EmailService.prototype.sendEmail).toBeCalledTimes(0);
     });
 
     it("If item list is not empty but the new item pass all condition he should be added and with 8 items in the list an email should be sended", async () => {
@@ -69,6 +70,7 @@ describe("Test to validate ToDoList addNewItem method", () => {
             return 8;
         });
         expect(toDoList.addNewItem(newItem)).toBe(newItem);
+        expect(EmailService.prototype.sendEmail).toBeCalledTimes(1);
     });
 
     it("If item list is full the new item shouldn't be added", async () => {
