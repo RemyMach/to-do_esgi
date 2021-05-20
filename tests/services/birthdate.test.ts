@@ -11,7 +11,7 @@ describe("Tests to validate the birthdate service", () => {
     });
 
     it("Should return true when called with a valid birthdate", () => {
-        test_birthdate = new Date("2000-01-01")
+        test_birthdate.setUTCFullYear(test_birthdate.getFullYear() - 30);
         expect(dateService.isBirthdateValid(test_birthdate)).toBeTruthy();
     });
 
