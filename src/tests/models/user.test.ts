@@ -8,7 +8,7 @@ describe('tests the validation for th user props', () => {
     beforeEach(() => {
         const date_less_14_years: Date = new Date();
         date_less_14_years.setUTCFullYear(date_less_14_years.getFullYear() - 14);
-        user = new UserModel(date_less_14_years, "pomme@pomme.fr", "jean", "tom", "userPassword");
+        user = new UserModel(date_less_14_years, "pomme@pomme.fr", "jean", "tom", "userPassword", 10);
     });
 
     it('Should return false because email is not an email', () => {
@@ -39,7 +39,7 @@ describe('tests the validation for th user props', () => {
 
         const date_higher_13_years: Date = new Date();
         date_higher_13_years.setUTCFullYear(date_higher_13_years.getFullYear() - 12);
-        user.birth_date = date_higher_13_years;
+        user.birthDate = date_higher_13_years;
         expect(user.isValid()).toBe(false);
     });
 
