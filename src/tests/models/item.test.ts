@@ -18,7 +18,7 @@ describe('tests the validation for the creation of an item', () => {
         ItemValidatorService.prototype.isContentValid = jest.fn().mockImplementationOnce(() => {
             return true;
         });
-        let item: ItemModel = new ItemModel("", new Date,  "");
+        let item: ItemModel = new ItemModel(0, "", new Date,  "");
         expect(item.isValid()).toBeTruthy();
     });
 
@@ -32,7 +32,7 @@ describe('tests the validation for the creation of an item', () => {
         ItemValidatorService.prototype.isContentValid = jest.fn().mockImplementationOnce(() => {
             return true;
         });
-        let item: ItemModel = new ItemModel("", new Date,  "");
+        let item: ItemModel = new ItemModel(0, "", new Date,  "");
         expect(item.isValid()).toBeFalsy();
     });
 
@@ -46,7 +46,7 @@ describe('tests the validation for the creation of an item', () => {
         ItemValidatorService.prototype.isContentValid = jest.fn().mockImplementationOnce(() => {
             return false;
         });
-        let item: ItemModel = new ItemModel("", new Date,  "");
+        let item: ItemModel = new ItemModel(0, "", new Date,  "");
         expect(item.isValid()).toBeFalsy();
     });
 
@@ -60,7 +60,7 @@ describe('tests the validation for the creation of an item', () => {
         ItemValidatorService.prototype.isContentValid = jest.fn().mockImplementationOnce(() => {
             return true;
         });
-        let item: ItemModel = new ItemModel("", new Date,  "");
+        let item: ItemModel = new ItemModel(0, "", new Date,  "");
         expect(item.isValid()).toBeFalsy();
     });
 });

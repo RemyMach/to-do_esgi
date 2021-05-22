@@ -9,8 +9,8 @@ describe("Tests to validate the email service", () => {
 
     beforeEach(() => {
         dateService = new DateService();
-        oldItem = new ItemModel("content", new Date(), "name1");
-        newItem = new ItemModel("content", new Date(), "name2");
+        oldItem = new ItemModel(0, "content", new Date(), "name1");
+        newItem = new ItemModel(0, "content", new Date(), "name2");
     });
 
     it("Should return true when called with a valid creation date", () => {
