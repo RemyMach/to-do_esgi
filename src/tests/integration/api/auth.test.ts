@@ -403,6 +403,27 @@ describe('Determine the auth routes behavior', () => {
 
         });
 
+        it('should return 400 because the login is not an email', async () => {
+            errorParam['errors'][0]['fields'] = { email: [ 'Email must be in a valid format' ]  };
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).post('/auth/login')
+                .send({
+                    email: "jean",
+                    password: "azertyuiop"
+                })
+                //test status
+                .expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user not insert in the db
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
         it('should return 200 because the login and password are valid', async () => {
             const sessions = await sessionController.getAllSessions();
             const numberSessions = sessions.length;
