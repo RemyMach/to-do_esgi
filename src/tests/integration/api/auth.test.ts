@@ -3,29 +3,37 @@ import app from '../../../app';
 import {validationResult} from "express-validator";
 import {UserController} from "../../../controllers/user.controller";
 import {destroyTablesElement, fillTables} from "../../fixtures";
+import {SessionController} from "../../../controllers/session.controller";
 
 describe('Determine the auth routes behavior', () => {
+
+    let errorParam: any;
+    let userController: UserController;
+    let sessionController: SessionController;
+
+    beforeAll(async (done) => {
+        userController = await UserController.getInstance();
+        sessionController = await SessionController.getInstance();
+        done();
+    });
+
+    beforeEach(async (done) => {
+        errorParam = {
+            errors: [ { message: 'The input provided is invalid' } ]
+        }
+        await destroyTablesElement();
+        await fillTables();
+        done();
+    });
 
     describe('Test the creation of a user', () => {
 
         let birthDateValid: string;
-        let errorParam: any;
-        let userController: UserController;
 
         beforeAll(async () => {
             const date = new Date();
             date.setUTCFullYear(new Date().getUTCFullYear() -13);
             birthDateValid  = date.toISOString();
-            userController = await UserController.getInstance();
-        });
-
-        beforeEach(async (done) => {
-            errorParam = {
-                errors: [ { message: 'The input provided is invalid' } ]
-            }
-            await destroyTablesElement();
-            await fillTables();
-            done();
         });
 
 
@@ -265,4 +273,154 @@ describe('Determine the auth routes behavior', () => {
             expect(user).not.toBeNull();
         });
     });
+
+    describe("Test the login of a user", () => {
+
+        it('should return 400 because the login and password are not filled', async () => {
+            errorParam['errors'][0]['fields'] = { email: [ 'Email must be in a valid format' ] , password: ["Invalid value"]};
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).post('/auth/login')
+                .send({
+                })
+                //test status
+                .expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user not insert in the db
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 400 because the login is not filled', async () => {
+            errorParam['errors'][0]['fields'] = { email: [ 'Email must be in a valid format' ]  };
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).post('/auth/login')
+                .send({
+                    password: 'azertyuiop'
+                })
+                //test status
+                .expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user not insert in the db
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 400 because the password is not filled', async () => {
+            errorParam['errors'][0]['fields'] = { password: ["Invalid value"]};
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).post('/auth/login')
+                .send({
+                    email: 'jean@pomme.fr'
+                })
+                //test status
+                .expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user not insert in the db
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 400 because the password is not filled', async () => {
+            errorParam['errors'][0]['fields'] = {  password: ["Invalid value"]};
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).post('/auth/login')
+                .send({
+                    email: 'jean@pomme.fr'
+                })
+                //test status
+                .expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user not insert in the db
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 400 because the email doesn\'t exist in the db', async () => {
+            errorParam['errors'][0]['fields'] = { user: [ 'le login et / ou le mot de passe est incorrect' ]  };
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).post('/auth/login')
+                .send({
+                    email: 'pomme@jean.fr',
+                    password: 'azertyuiop'
+                })
+                //test status
+                .expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user not insert in the db
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 400 because the password is not the good one for the email', async () => {
+            errorParam['errors'][0]['fields'] = { user: [ 'le login et / ou le mot de passe est incorrect' ]  };
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).post('/auth/login')
+                .send({
+                    email: 'jean@pomme.fr',
+                    password: 'azertyuiopo'
+                })
+                //test status
+                .expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user not insert in the db
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 200 because the login and password are valid', async () => {
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).post('/auth/login')
+                .send({
+                    email: "jean@pomme.fr",
+                    password: "azertyuiop"
+                })
+                //test status
+                .expect(200);
+
+            //test return body
+            expect(response.body).toHaveProperty('token');
+
+            //test user not insert in the db
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions + 1);
+
+        });
+    })
 });

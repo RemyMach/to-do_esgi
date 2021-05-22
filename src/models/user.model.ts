@@ -1,4 +1,5 @@
 import {
+    CreateOptions,
     DataTypes, HasManyAddAssociationMixin, HasManyGetAssociationsMixin,
     Model,
     ModelCtor,
@@ -6,6 +7,7 @@ import {
     Sequelize
 } from "sequelize";
 import {SessionInstance, SessionProps} from "./session.model";
+import {hash} from "bcrypt";
 
 interface UserProps {
     readonly id: number;
@@ -67,7 +69,7 @@ export interface UserInstance extends Model<UserProps, UserCreationProps>, UserP
 }
 
 export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
-    return sequelize.define<UserInstance>("User", {
+    const user =  sequelize.define<UserInstance>("User", {
         id: {
             type: DataTypes.BIGINT,
             primaryKey: true,
@@ -110,4 +112,16 @@ export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
         underscored: false,
         timestamps: true
     });
+
+    user.addHook('beforeCreate', async (user: UserInstance, options: CreateOptions<UserProps>) => {
+        const passwordHashed = await hash(user.password, 8);
+        user.password = passwordHashed;
+    });
+
+    user.addHook('beforeUpdate', async (user: UserInstance, options: CreateOptions<UserProps>) => {
+        const passwordHashed = await hash(user.password, 8);
+        user.password = passwordHashed;
+    });
+
+    return user;
 }

@@ -4,6 +4,8 @@ import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
 import {validateBodyBirthDate} from "../middlewares/auth.middleware";
+import validator from "validator";
+import {SessionInstance} from "../models/session.model";
 
 const authRouter = express.Router();
 
@@ -62,6 +64,53 @@ authRouter.post("/subscribe",[
             });
             throw new InvalidInput(errors);
         }
+});
+
+authRouter.post("/login", [
+    body('email')
+        .isEmail()
+        .withMessage('Email must be in a valid format')
+        .normalizeEmail(),
+    body('password')
+        .trim()
+        .isLength({ min: 1 })
+    ],
+    async function(req: Request, res: Response) {
+
+    const errors = validationResult(req).array();
+
+    if (errors.length > 0) {
+        throw new InvalidInput(errors);
+    }
+
+    const {email, password} = req.body;
+    const authController = await AuthController.getInstance();
+    let session: SessionInstance | null;
+
+    try{
+        session = await authController.log(email, password);
+
+    }catch(validationError){
+        errors.push({
+            location: 'body',
+            value: 'db',
+            param: 'db',
+            msg: 'db problems',
+        });
+        throw new InvalidInput(errors);
+    }
+
+    if(session === null) {
+        errors.push({
+            location: 'body',
+            value: 'user',
+            param: 'user',
+            msg: 'le login et / ou le mot de passe est incorrect',
+        });
+        throw new InvalidInput(errors);
+    }
+
+    return res.status(200).json({token: session.token}).end();
 });
 
 export {
