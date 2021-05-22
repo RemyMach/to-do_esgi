@@ -1,30 +1,51 @@
 import request from "supertest";
 import app from '../../../app';
 import {validationResult} from "express-validator";
+import {UserController} from "../../../controllers/user.controller";
 
 describe('Determine the auth routes behavior', () => {
 
     describe('Test the creation of a user', () => {
 
         let birthDateValid: string;
+        let errorParam: any;
+        let userController: UserController;
 
-        beforeAll(() => {
+        beforeAll(async () => {
             const date = new Date();
             date.setUTCFullYear(new Date().getUTCFullYear() -13);
             birthDateValid  = date.toISOString();
+            userController = await UserController.getInstance();
+        });
+
+        beforeEach(() => {
+            errorParam = {
+                errors: [ { message: 'The input provided is invalid' } ]
+            }
         });
 
 
 
         it('should return 400 because the firstName is empty', async () => {
+
+            errorParam['errors'][0]['fields'] = { firstName: [ 'le firstName ne peut pas être vide' ]  };
             const response = await request(app).post('/auth/subscribe')
                 .send({
                     firstName: '',
                     lastName: "pomme",
-                    email: 'remy@example.com',
+                    email: 'tom@example.com',
                     password: "azertyuiop",
                     birthDate: birthDateValid
-                }).expect(400);
+                })
+                //test status
+                .expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user not insert in the db
+            const user = await userController.getUserByEmail('tom@example.com');
+            expect(user).toBeNull();
 
         });
 
