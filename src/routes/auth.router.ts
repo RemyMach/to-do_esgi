@@ -1,8 +1,9 @@
-import express, {Request, Response}from "express";
+import express, {NextFunction, Request, Response} from "express";
 import {AuthController} from "../controllers/auth.controller";
 import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
+import {validateBodyBirthDate} from "../middlewares/auth.middleware";
 
 const authRouter = express.Router();
 
@@ -22,19 +23,14 @@ authRouter.post("/subscribe",[
     body('password')
         .trim()
         .isLength({ min: 8, max: 40 })
-        .withMessage('le mot de passe doit-être entre 8 et 40 carractères')
+        .withMessage('le mot de passe doit-être entre 8 et 40 carractères'),
+    validateBodyBirthDate
     ],
     async function(req: Request, res: Response) {
-        const date = new Date();
-        date.setUTCFullYear(new Date().getUTCFullYear() -13);
+
         const errors = validationResult(req).array();
-        if(date.toISOString() < req.body.birthDate) {
-            errors.push({
-                location: 'body',
-                value: req.body.birthDate,
-                param: 'birthDate',
-                msg: 'la date ne respecte pas la consigne',
-            });
+        if(res.locals.errors) {
+            errors.push(res.locals.errors.birthDate);
         }
 
         if (errors.length > 0) {
