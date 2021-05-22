@@ -32,15 +32,16 @@ export class UserFixture implements fixture{
         this.user_remy = await manager.user.create({
             firstName: "remy",
             lastName: "Mac",
-            email: 'jean@pomme.example',
+            email: 'jean@pomme.fr',
             password: "azertyuiop",
             birthDate: birthDateValid
         });
 
+
         this.user_jean = await manager.user.create({
             firstName: "jean",
             lastName: "duc",
-            email: 'kim@pomme.com',
+            email: 'kim@pomme.fr',
             password: "azertyuiop",
             birthDate: birthDateValid
         });

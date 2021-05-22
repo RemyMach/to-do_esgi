@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node index.ts",
+    "resetDB": "env-cmd -f ./config/test.env ts-node src/db/reset.db.ts",
     "test": "env-cmd -f ./config/test.env jest --runInBand --collectCoverage --watchAll"
   },
   "author": "",

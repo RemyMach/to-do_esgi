@@ -95,7 +95,6 @@ export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
         birthDate: {
             type: DataTypes.DATE,
             allowNull: false,
-            unique: true
         },
         password: {
             type: DataTypes.STRING,
@@ -108,7 +107,7 @@ export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
         },
     }, {
         freezeTableName: true,
-        underscored: true,
+        underscored: false,
         timestamps: true
     });
 }

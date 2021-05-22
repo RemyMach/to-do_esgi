@@ -23,8 +23,8 @@ describe('Determine the auth routes behavior', () => {
             errorParam = {
                 errors: [ { message: 'The input provided is invalid' } ]
             }
-            //await destroyTablesElement();
-            //await fillTables();
+            await destroyTablesElement();
+            await fillTables();
             done();
         });
 
@@ -245,7 +245,7 @@ describe('Determine the auth routes behavior', () => {
             const validParam = {
                     "firstName": "remy",
                     "lastName": "pomme",
-                    "user": "jean@pomme.example"
+                    "user": "jean@pomme.uk"
                  };
 
             const response = await request(app).post('/auth/subscribe')
@@ -261,7 +261,7 @@ describe('Determine the auth routes behavior', () => {
             expect(response.body).toEqual(validParam);
 
             //test user not insert in the db
-            const user = await userController.getUserByEmail('jean@pomme.example');
+            const user = await userController.getUserByEmail('jean@pomme.uk');
             expect(user).not.toBeNull();
         });
     });
