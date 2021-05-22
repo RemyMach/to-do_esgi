@@ -2,6 +2,7 @@ import request from "supertest";
 import app from '../../../app';
 import {validationResult} from "express-validator";
 import {UserController} from "../../../controllers/user.controller";
+import {destroyTablesElement, fillTables} from "../../fixtures";
 
 describe('Determine the auth routes behavior', () => {
 
@@ -18,10 +19,13 @@ describe('Determine the auth routes behavior', () => {
             userController = await UserController.getInstance();
         });
 
-        beforeEach(() => {
+        beforeEach(async (done) => {
             errorParam = {
                 errors: [ { message: 'The input provided is invalid' } ]
             }
+            //await destroyTablesElement();
+            //await fillTables();
+            done();
         });
 
 
@@ -248,7 +252,7 @@ describe('Determine the auth routes behavior', () => {
                 .send({
                     firstName: "remy",
                     lastName: "pomme",
-                    email: 'jean@pomme.example',
+                    email: 'jean@pomme.uk',
                     password: "azertyuiop",
                     birthDate: birthDateValid
                 }).expect(201);
