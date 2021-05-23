@@ -47,7 +47,7 @@ export class SequelizeManager implements SequelizeManagerProps {
         }
 
         SequelizeManager.associate(managerProps);
-        await sequelize.sync({force: true});
+        await sequelize.sync();
         return new SequelizeManager(managerProps);
     }
 

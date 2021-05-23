@@ -4,12 +4,16 @@ import {validationResult} from "express-validator";
 import {UserController} from "../../../controllers/user.controller";
 import {destroyTablesElement, fillTables} from "../../fixtures";
 import {SessionController} from "../../../controllers/session.controller";
+import {SessionFixture} from "../../fixtures/session.fixture";
+import {AuthController} from "../../../controllers/auth.controller";
 
 describe('Determine the auth routes behavior', () => {
 
     let errorParam: any;
     let userController: UserController;
     let sessionController: SessionController;
+    let sessionFixture: SessionFixture;
+    let authController: AuthController;
 
     beforeAll(async (done) => {
         userController = await UserController.getInstance();
@@ -443,5 +447,131 @@ describe('Determine the auth routes behavior', () => {
             expect(await sessionController.getAllSessions()).toHaveLength(numberSessions + 1);
 
         });
-    })
+
+        describe("Test the logout of a user", () => {
+
+            it('should return 401 because the user doesn\'t fill any header', async () => {
+
+                const sessions = await sessionController.getAllSessions();
+                const numberSessions = sessions.length;
+
+                const response = await request(app).delete('/auth/logout')
+                    .send()
+                    //test status
+                    .expect(401);
+
+                //test return body
+                expect(response.body).toEqual({});
+
+                //test session table have the same number of element
+                expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+            });
+
+            it('should return 403 because the header for authorization is empty', async () => {
+
+                const sessions = await sessionController.getAllSessions();
+                const numberSessions = sessions.length;
+
+                const response = await request(app).delete('/auth/logout')
+                    .set('Authorization', ``)
+                    .send()
+                    //test status
+                    .expect(403);
+
+                //test return body
+                expect(response.body).toEqual({});
+
+                //test session table have the same number of element
+                expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+            });
+
+            it('should return 403 because the header for authorization have Bearer but no value', async () => {
+
+                const sessions = await sessionController.getAllSessions();
+                const numberSessions = sessions.length;
+
+                const response = await request(app).delete('/auth/logout')
+                    .set('Authorization', `Bearer`)
+                    .send()
+                    //test status
+                    .expect(403);
+
+                //test return body
+                expect(response.body).toEqual({});
+
+                //test session table have the same number of element
+                expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+            });
+
+            it('should return 403 because the header for authorization have Bearer but a bad token', async () => {
+
+                const sessions = await sessionController.getAllSessions();
+                const numberSessions = sessions.length;
+
+                const response = await request(app).delete('/auth/logout')
+                    .set('Authorization', `Bearer fghjjhgcvbhjgfcghvjhgjkhijs`)
+                    .send()
+                    //test status
+                    .expect(403);
+
+                //test return body
+                expect(response.body).toEqual({});
+
+                //test session table have the same number of element
+                expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+            });
+
+            it('should return 403 because the header for authorization have Bearer but a bad token', async () => {
+
+                const sessions = await sessionController.getAllSessions();
+                const numberSessions = sessions.length;
+
+                const response = await request(app).delete('/auth/logout')
+                    .set('Authorization', `Bearer fghjjhgcvbhjgfcghvjhgjkhijs`)
+                    .send()
+                    //test status
+                    .expect(403);
+
+                //test return body
+                expect(response.body).toEqual({});
+
+                //test session table have the same number of element
+                expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+            });
+
+            it('should return 204 because the header for authorization have a valid Bearer', async () => {
+
+                sessionFixture = await SessionFixture.getInstance();
+                authController = await AuthController.getInstance();
+                const token = sessionFixture.session_user_jean?.token;
+
+                const sessions = await sessionController.getAllSessions();
+                const numberSessions = sessions.length;
+
+                //verify token exist
+                expect(token).not.toEqual(undefined);
+
+                const response = await request(app).delete('/auth/logout')
+                    .set('Authorization', `Bearer ${token}`)
+                    .send()
+                    //test status
+                    .expect(204);
+
+                //test return body
+                expect(response.body).toEqual({});
+
+                //test session table have one session less
+                expect(await sessionController.getAllSessions()).toHaveLength(numberSessions - 1);
+
+                //test the session doesn't exist anymore
+                if(token !== undefined)
+                    expect(await authController.getSession(token)).toEqual(null);
+            });
+        });
+    });
 });

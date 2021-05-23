@@ -3,7 +3,7 @@ import {AuthController} from "../controllers/auth.controller";
 import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
-import {validateBodyBirthDate} from "../middlewares/auth.middleware";
+import {authMiddleware, validateBodyBirthDate} from "../middlewares/auth.middleware";
 import validator from "validator";
 import {SessionInstance} from "../models/session.model";
 
@@ -111,6 +111,35 @@ authRouter.post("/login", [
     }
 
     return res.status(200).json({token: session.token}).end();
+});
+
+authRouter.delete("/logout",
+    authMiddleware,
+    async function(req: Request, res: Response) {
+
+    const errors = validationResult(req).array();
+    const auth = req.headers["authorization"];
+    if(auth === undefined) {
+        return res.status(403).end();
+    }
+
+    const token = auth.replace('Bearer ', '');
+    const authController = await AuthController.getInstance();
+
+    try{
+        await authController.deleteSession(token);
+        return res.status(204).end();
+
+    }catch(validationError){
+        errors.push({
+            location: 'body',
+            value: 'db',
+            param: 'db',
+            msg: 'db problems',
+        });
+        throw new InvalidInput(errors);
+    }
+
 });
 
 export {
