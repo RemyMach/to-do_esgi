@@ -21,7 +21,7 @@ authRouter.post("/subscribe",[
         .withMessage('le lastName ne peut pas être vide'),
     body('email')
         .isEmail()
-        .withMessage('Email must be in a valid format')
+        .withMessage('le mail n\'est pas un mail valide')
         .normalizeEmail(),
     body('password')
         .trim()
@@ -79,7 +79,7 @@ authRouter.post("/subscribe",[
 authRouter.post("/login", [
     body('email')
         .isEmail()
-        .withMessage('Email must be in a valid format')
+        .withMessage('le mail n\'est pas un mail valide')
         .normalizeEmail(),
     body('password')
         .trim()

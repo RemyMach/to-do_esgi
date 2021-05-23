@@ -120,7 +120,7 @@ describe('Determine the auth routes behavior', () => {
         });
 
         it('should  return 400 because email have not the good format', async () => {
-            errorParam['errors'][0]['fields'] = { email: [ 'Email must be in a valid format' ]  };
+            errorParam['errors'][0]['fields'] = { email: [ 'le mail n\'est pas un mail valide' ]  };
             const response = await request(app).post('/auth/subscribe')
                 .send({
                     firstName: "remy",
@@ -300,7 +300,7 @@ describe('Determine the auth routes behavior', () => {
     describe("Test the login of a user", () => {
 
         it('should return 400 because the login and password are not filled', async () => {
-            errorParam['errors'][0]['fields'] = { email: [ 'Email must be in a valid format' ] , password: ["Invalid value"]};
+            errorParam['errors'][0]['fields'] = { email: [ 'le mail n\'est pas un mail valide' ] , password: ["Invalid value"]};
 
             const sessions = await sessionController.getAllSessions();
             const numberSessions = sessions.length;
@@ -320,7 +320,7 @@ describe('Determine the auth routes behavior', () => {
         });
 
         it('should return 400 because the login is not filled', async () => {
-            errorParam['errors'][0]['fields'] = { email: [ 'Email must be in a valid format' ]  };
+            errorParam['errors'][0]['fields'] = { email: [ 'le mail n\'est pas un mail valide' ]  };
 
             const sessions = await sessionController.getAllSessions();
             const numberSessions = sessions.length;
@@ -427,7 +427,7 @@ describe('Determine the auth routes behavior', () => {
         });
 
         it('should return 400 because the login is not an email', async () => {
-            errorParam['errors'][0]['fields'] = { email: [ 'Email must be in a valid format' ]  };
+            errorParam['errors'][0]['fields'] = { email: [ 'le mail n\'est pas un mail valide' ]  };
             const sessions = await sessionController.getAllSessions();
             const numberSessions = sessions.length;
 
