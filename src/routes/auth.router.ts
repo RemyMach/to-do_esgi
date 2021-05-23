@@ -6,6 +6,7 @@ import InvalidInput from "../errors/invalid-input";
 import {authMiddleware, validateBodyBirthDate} from "../middlewares/auth.middleware";
 import validator from "validator";
 import {SessionInstance} from "../models/session.model";
+import {ValidationError} from "sequelize";
 
 const authRouter = express.Router();
 
@@ -56,12 +57,21 @@ authRouter.post("/subscribe",[
                 .end();
 
         }catch(validationError){
-            errors.push({
-                location: 'body',
-                value: 'db',
-                param: 'db',
-                msg: 'db problems',
-            });
+            if(validationError instanceof ValidationError) {
+                errors.push({
+                    location: 'body',
+                    value: req.body.email,
+                    param: 'email',
+                    msg: validationError.message,
+                });
+            }else {
+                errors.push({
+                    location: 'body',
+                    value: 'db',
+                    param: 'db',
+                    msg: 'db problems',
+                });
+            }
             throw new InvalidInput(errors);
         }
 });
@@ -130,7 +140,7 @@ authRouter.delete("/logout",
         await authController.deleteSession(token);
         return res.status(204).end();
 
-    }catch(validationError){
+    }catch{
         errors.push({
             location: 'body',
             value: 'db',

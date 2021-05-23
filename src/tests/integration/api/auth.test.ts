@@ -1,6 +1,5 @@
 import request from "supertest";
 import app from '../../../app';
-import {validationResult} from "express-validator";
 import {UserController} from "../../../controllers/user.controller";
 import {destroyTablesElement, fillTables} from "../../fixtures";
 import {SessionController} from "../../../controllers/session.controller";
@@ -211,7 +210,7 @@ describe('Determine the auth routes behavior', () => {
             expect(user).toBeNull();
         });
 
-        it('should not work because a birthdate is not a date', async () => {
+        it('should return 400 because a birthdate is not a date', async () => {
             errorParam['errors'][0]['fields'] = { birthDate: [ 'le paramètre birthDate ne peut pas être manquant' ]  };
 
             const response = await request(app).post('/auth/subscribe')
@@ -230,7 +229,7 @@ describe('Determine the auth routes behavior', () => {
             expect(user).toBeNull();
         });
 
-        it('should not work because the birthdate is under 13 years', async () => {
+        it('should return 400 because the birthdate is under 13 years', async () => {
             errorParam['errors'][0]['fields'] = { birthDate: [ 'le user est trop jeune pour s\'incrire, il doit minimum avoir 13 ans' ]  };
 
             const date_less_12_years = new Date();
@@ -253,7 +252,27 @@ describe('Determine the auth routes behavior', () => {
             expect(user).toBeNull();
         });
 
-        it('should work beacause all parameters are good', async () => {
+        it('should return 400 beacause the mail is already use', async () => {
+            errorParam['errors'][0]['fields'] = { email: [ 'le mail fournit est déjà utilisé par un autre utilisateur' ]  };
+
+            const response = await request(app).post('/auth/subscribe')
+                .send({
+                    firstName: "remy",
+                    lastName: "pomme",
+                    email: 'jean@pomme.fr',
+                    password: "azertyuiop",
+                    birthDate: birthDateValid
+                }).expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user always in the db
+            const user = await userController.getUserByEmail('jean@pomme.fr');
+            expect(user).not.toBeNull();
+        });
+
+        it('should return 200 beacause all parameters are good', async () => {
             const validParam = {
                     "firstName": "remy",
                     "lastName": "pomme",

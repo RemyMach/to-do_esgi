@@ -80,7 +80,7 @@ export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
             allowNull: false,
             unique: {
                 name: 'email',
-                msg: 'The email provide is already taken'
+                msg: 'le mail fournit est déjà utilisé par un autre utilisateur'
             },
             validate: {
                 isEmail: true
@@ -102,8 +102,8 @@ export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
             type: DataTypes.STRING,
             validate: {
                 len: {
-                    args: [8, 100],
-                    msg: "Your password must be between 8 and 100 characters"
+                    args: [8, 40],
+                    msg: "le mot de passe doit-être compris entre 8 et 40 carractères inclus"
                 }
             }
         },
