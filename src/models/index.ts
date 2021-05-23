@@ -1,6 +1,7 @@
 import {ModelCtor, Sequelize} from "sequelize";
 import userCreator, {UserInstance} from "./user.model";
 import sessionCreator, {SessionInstance} from "./session.model";
+import itemCreator, {ItemInstance} from "./item.model";
 import {Dialect} from "sequelize/types/lib/sequelize";
 
 
@@ -8,6 +9,7 @@ export interface SequelizeManagerProps {
     sequelize: Sequelize;
     user: ModelCtor<UserInstance>;
     session: ModelCtor<SessionInstance>;
+    item: ModelCtor<ItemInstance>;
 }
 
 export class SequelizeManager implements SequelizeManagerProps {
@@ -17,7 +19,7 @@ export class SequelizeManager implements SequelizeManagerProps {
     sequelize: Sequelize;
     user: ModelCtor<UserInstance>;
     session: ModelCtor<SessionInstance>;
-
+    item: ModelCtor<ItemInstance>;
 
     public static async getInstance(): Promise<SequelizeManager> {
         if(SequelizeManager.instance === undefined) {
@@ -41,6 +43,7 @@ export class SequelizeManager implements SequelizeManagerProps {
             sequelize,
             user: userCreator(sequelize),
             session: sessionCreator(sequelize),
+            item: itemCreator(sequelize),
         }
 
         SequelizeManager.associate(managerProps);
@@ -59,5 +62,6 @@ export class SequelizeManager implements SequelizeManagerProps {
         this.sequelize = props.sequelize;
         this.user = props.user;
         this.session = props.session;
+        this.item = props.item;
     }
 }

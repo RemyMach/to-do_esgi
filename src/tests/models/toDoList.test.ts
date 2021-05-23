@@ -11,7 +11,7 @@ describe("Test to validate ToDoList addNewItem method", () => {
 
     beforeEach(() => {
         toDoList = new ToDoListModel();
-        newItem = new ItemModel("Test", new Date(19, 1, 2000), "Me");
+        newItem = new ItemModel(0, "Test", new Date(19, 1, 2000), "Me");
         ToDoListValidatorService.prototype.getNumberOfItem = jest.fn().mockImplementation(() => {
             return 0;
         });
