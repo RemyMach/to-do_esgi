@@ -5,12 +5,15 @@ import {
     Optional,
     ModelCtor,
     HasManyGetAssociationsMixin,
-    HasManySetAssociationsMixin
+    HasManySetAssociationsMixin,
+    HasOneGetAssociationMixin,
+    HasOneSetAssociationMixin
 } from "sequelize";
 import {ItemInstance, ItemModel} from "./item.model";
 import {ToDoListValidatorService} from "../services/toDoListValidator.service";
 import {DateService} from "../services/date.service";
 import {EmailService} from "../services/email.service";
+import {UserInstance} from "./user.model";
 
 export interface ToDoListProps {
     readonly id: number;
@@ -83,8 +86,11 @@ export interface ToDoListCreationProps extends Optional<ToDoListProps, "id"> {}
 
 export interface ToDoListInstance extends Model<ToDoListProps, ToDoListCreationProps>, ToDoListProps
 {
-    getItems: HasManyGetAssociationsMixin<ItemInstance>;
     setItem: HasManySetAssociationsMixin<ItemInstance, "id">;
+    AddItems: HasManyGetAssociationsMixin<ItemInstance>;
+
+    setUser: HasOneSetAssociationMixin<UserInstance, "id">;
+    getUser: HasOneGetAssociationMixin<UserInstance>;
 }
 
 export default function (sequelize: Sequelize): ModelCtor<ToDoListInstance>

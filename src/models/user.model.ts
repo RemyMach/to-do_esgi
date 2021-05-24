@@ -1,6 +1,10 @@
 import {
+    BelongsToGetAssociationMixin,
+    BelongsToSetAssociationMixin,
     CreateOptions,
-    DataTypes, HasManyAddAssociationMixin, HasManyGetAssociationsMixin,
+    DataTypes,
+    HasManyAddAssociationMixin,
+    HasManyGetAssociationsMixin,
     Model,
     ModelCtor,
     Optional,
@@ -8,6 +12,7 @@ import {
 } from "sequelize";
 import {SessionInstance, SessionProps} from "./session.model";
 import {hash} from "bcrypt";
+import {ToDoListInstance} from "./toDoList.model";
 
 interface UserProps {
     readonly id: number;
@@ -66,6 +71,9 @@ export interface UserCreationProps extends Optional<UserProps, "id"> {}
 export interface UserInstance extends Model<UserProps, UserCreationProps>, UserProps {
     addSession: HasManyAddAssociationMixin<SessionInstance, "id">;
     getSessions: HasManyGetAssociationsMixin<SessionInstance>;
+
+    setToDoList: BelongsToGetAssociationMixin<ToDoListInstance>;
+    addToDoList: BelongsToSetAssociationMixin<ToDoListInstance, "id">;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
