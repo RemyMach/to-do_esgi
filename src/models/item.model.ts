@@ -1,5 +1,7 @@
 import {
-    DataTypes, HasOneGetAssociationMixin,
+    DataTypes,
+    HasOneGetAssociationMixin,
+    HasOneSetAssociationMixin,
     Model,
     ModelCtor,
     Optional,
@@ -45,6 +47,7 @@ export interface ItemCreationProps extends Optional<ItemProps, "id"> {}
 
 export interface ItemInstance extends Model<ItemProps, ItemCreationProps>, ItemProps {
     getList: HasOneGetAssociationMixin<ToDoListInstance>;
+    setList: HasOneSetAssociationMixin<ToDoListInstance, "id">;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<ItemInstance> {
