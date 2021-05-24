@@ -2,6 +2,7 @@ import {ModelCtor, Sequelize} from "sequelize";
 import userCreator, {UserInstance} from "./user.model";
 import sessionCreator, {SessionInstance} from "./session.model";
 import itemCreator, {ItemInstance} from "./item.model";
+import toDoListCreator, {ToDoListInstance} from "./toDoList.model";
 import {Dialect} from "sequelize/types/lib/sequelize";
 
 
@@ -10,6 +11,7 @@ export interface SequelizeManagerProps {
     user: ModelCtor<UserInstance>;
     session: ModelCtor<SessionInstance>;
     item: ModelCtor<ItemInstance>;
+    toDoList: ModelCtor<ToDoListInstance>;
 }
 
 export class SequelizeManager implements SequelizeManagerProps {
@@ -20,6 +22,7 @@ export class SequelizeManager implements SequelizeManagerProps {
     user: ModelCtor<UserInstance>;
     session: ModelCtor<SessionInstance>;
     item: ModelCtor<ItemInstance>;
+    toDoList: ModelCtor<ToDoListInstance>;
 
     public static async getInstance(): Promise<SequelizeManager> {
         if(SequelizeManager.instance === undefined) {
@@ -44,6 +47,7 @@ export class SequelizeManager implements SequelizeManagerProps {
             user: userCreator(sequelize),
             session: sessionCreator(sequelize),
             item: itemCreator(sequelize),
+            toDoList: toDoListCreator(sequelize)
         }
 
         SequelizeManager.associate(managerProps);
@@ -56,6 +60,8 @@ export class SequelizeManager implements SequelizeManagerProps {
         props.user.hasMany(props.session); // User N Session
         props.session.belongsTo(props.user, {foreignKey: 'user_id'}); // Session 1 User
 
+        props.toDoList.hasMany(props.item);
+        props.item.belongsTo(props.toDoList, {foreignKey: 'toDoList_id'});
     }
 
     private constructor(props: SequelizeManagerProps) {
@@ -63,5 +69,6 @@ export class SequelizeManager implements SequelizeManagerProps {
         this.user = props.user;
         this.session = props.session;
         this.item = props.item;
+        this.toDoList = props.toDoList;
     }
 }

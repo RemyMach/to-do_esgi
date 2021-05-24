@@ -6,6 +6,7 @@ import {
     Sequelize
 } from "sequelize";
 import {ItemValidatorService} from '../services/itemValidator.service';
+import {ToDoListInstance} from "./toDoList.model";
 
 interface ItemProps {
     readonly id: number;
@@ -43,7 +44,7 @@ export class ItemModel implements ItemProps {
 export interface ItemCreationProps extends Optional<ItemProps, "id"> {}
 
 export interface ItemInstance extends Model<ItemProps, ItemCreationProps>, ItemProps {
-    // getList: HasOneGetAssociationMixin<ToDoListInstance>;
+    getList: HasOneGetAssociationMixin<ToDoListInstance>;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<ItemInstance> {

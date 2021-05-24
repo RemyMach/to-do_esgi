@@ -1,28 +1,41 @@
-import {ItemModel} from "./item.model";
+import {
+    DataTypes,
+    Model,
+    Sequelize,
+    Optional,
+    ModelCtor,
+    HasManyGetAssociationsMixin,
+    HasManySetAssociationsMixin
+} from "sequelize";
+import {ItemInstance, ItemModel} from "./item.model";
 import {ToDoListValidatorService} from "../services/toDoListValidator.service";
 import {DateService} from "../services/date.service";
 import {EmailService} from "../services/email.service";
 
 export interface ToDoListProps {
-    toDoListValidatorService: ToDoListValidatorService;
-    dateService: DateService;
-    items: ItemModel[];
+    readonly id: number;
 }
 
-export class ToDoListModel implements ToDoListProps{
+export class ToDoListModel implements ToDoListProps
+{
+    readonly id: number;
+
     toDoListValidatorService: ToDoListValidatorService;
     dateService: DateService;
     emailService: EmailService;
     items: ItemModel[];
 
-    constructor() {
+    constructor(toDoListProps: ToDoListProps) {
+        this.id = toDoListProps.id;
+
         this.toDoListValidatorService = new ToDoListValidatorService();
         this.dateService = new DateService();
         this.emailService = new EmailService();
         this.items = [];
     }
 
-    public getItem(name: string): ItemModel | null {
+    public getItem(name: string): ItemModel | null
+    {
         return this.toDoListValidatorService.searchItemByName(name, this.items);
     }
 
@@ -47,6 +60,7 @@ export class ToDoListModel implements ToDoListProps{
             return null;
         }
     }
+
     public updateItem(name: string, content: string) : ItemModel | null
     {
         if(this.toDoListValidatorService.searchItemByName(name, this.items) === null){
@@ -63,5 +77,27 @@ export class ToDoListModel implements ToDoListProps{
         this.items = this.toDoListValidatorService.deleteItemByName(name, this.items);
         return true;
     }
+}
 
+export interface ToDoListCreationProps extends Optional<ToDoListProps, "id"> {}
+
+export interface ToDoListInstance extends Model<ToDoListProps, ToDoListCreationProps>, ToDoListProps
+{
+    getItems: HasManyGetAssociationsMixin<ItemInstance>;
+    setItem: HasManySetAssociationsMixin<ItemInstance, "id">;
+}
+
+export default function (sequelize: Sequelize): ModelCtor<ToDoListInstance>
+{
+    return sequelize.define<ToDoListInstance>("ToDoList", {
+        id: {
+            type: DataTypes.BIGINT,
+            primaryKey: true,
+            autoIncrement: true
+        }
+    },{
+        freezeTableName: true,
+        underscored: true,
+        timestamps: true,
+    })
 }
