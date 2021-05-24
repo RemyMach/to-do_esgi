@@ -103,7 +103,7 @@ export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
             validate: {
                 len: {
                     args: [8, 40],
-                    msg: "le mot de passe doit-être compris entre 8 et 40 carractères inclus"
+                    msg: "le mot de passe doit-être compris entre 8 et 40 caractères inclus"
                 }
             }
         },
