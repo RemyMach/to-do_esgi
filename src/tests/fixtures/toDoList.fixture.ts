@@ -25,7 +25,7 @@ export class ToDoListFixture implements fixture
         this.todo_list_for_user_remy = await manager.toDoList.create({
             id: 1
         });
-        // this.todo_list_for_user_remy.setUser(userFixture.user_remy);
+        this.todo_list_for_user_remy.setUser(userFixture.user_remy);
     }
 
     public async destroyFieldsTable(): Promise<void> {

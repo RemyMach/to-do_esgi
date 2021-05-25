@@ -6,8 +6,8 @@ import {
     ModelCtor,
     HasManyGetAssociationsMixin,
     HasManySetAssociationsMixin,
-    HasOneGetAssociationMixin,
-    HasOneSetAssociationMixin
+    BelongsToSetAssociationMixin,
+    BelongsToGetAssociationMixin
 } from "sequelize";
 import {ItemInstance, ItemModel} from "./item.model";
 import {ToDoListValidatorService} from "../services/toDoListValidator.service";
@@ -89,8 +89,8 @@ export interface ToDoListInstance extends Model<ToDoListProps, ToDoListCreationP
     setItem: HasManySetAssociationsMixin<ItemInstance, "id">;
     AddItems: HasManyGetAssociationsMixin<ItemInstance>;
 
-    setUser: HasOneSetAssociationMixin<UserInstance, "id">;
-    getUser: HasOneGetAssociationMixin<UserInstance>;
+    setUser: BelongsToSetAssociationMixin<UserInstance, "id">;
+    getUser: BelongsToGetAssociationMixin<UserInstance>;
 }
 
 export default function (sequelize: Sequelize): ModelCtor<ToDoListInstance>

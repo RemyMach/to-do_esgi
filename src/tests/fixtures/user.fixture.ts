@@ -27,7 +27,6 @@ export class UserFixture implements fixture{
     public async fillTable(): Promise<void> {
 
         const manager = await SequelizeManager.getInstance();
-        const toDoListFixture = await ToDoListFixture.getInstance();
         const birthDateValid = new Date();
         birthDateValid.setUTCFullYear(new Date().getUTCFullYear() -13);
 
@@ -38,7 +37,6 @@ export class UserFixture implements fixture{
             password: "azertyuiop",
             birthDate: birthDateValid
         });
-        this.user_remy.setToDoList(toDoListFixture.todo_list_for_user_remy);
 
         this.user_jean = await manager.user.create({
             firstName: "jean",

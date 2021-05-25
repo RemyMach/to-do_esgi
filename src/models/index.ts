@@ -60,7 +60,8 @@ export class SequelizeManager implements SequelizeManagerProps {
         props.user.hasMany(props.session); // User N Session
         props.session.belongsTo(props.user, {foreignKey: 'user_id'}); // Session 1 User
 
-        props.user.belongsTo(props.toDoList, {foreignKey: 'toDoList_id'});
+        props.user.hasMany(props.toDoList);
+        props.toDoList.belongsTo(props.user, {foreignKey: 'user_id'});
 
         props.toDoList.hasMany(props.item);
         props.item.belongsTo(props.toDoList, {foreignKey: 'toDoList_id'});

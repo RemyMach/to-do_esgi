@@ -1,6 +1,4 @@
 import {
-    BelongsToGetAssociationMixin,
-    BelongsToSetAssociationMixin,
     CreateOptions,
     DataTypes,
     HasManyAddAssociationMixin,
@@ -72,8 +70,8 @@ export interface UserInstance extends Model<UserProps, UserCreationProps>, UserP
     addSession: HasManyAddAssociationMixin<SessionInstance, "id">;
     getSessions: HasManyGetAssociationsMixin<SessionInstance>;
 
-    getToDoList: BelongsToGetAssociationMixin<ToDoListInstance>;
-    setToDoList: BelongsToSetAssociationMixin<ToDoListInstance, "id">;
+    getToDoList: HasManyGetAssociationsMixin<ToDoListInstance>;
+    addToDoList: HasManyAddAssociationMixin<ToDoListInstance, "id">;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
