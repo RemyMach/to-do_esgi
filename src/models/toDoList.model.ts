@@ -15,12 +15,12 @@ import {EmailService} from "../services/email.service";
 import {UserInstance} from "./user.model";
 
 export interface ToDoListProps {
-    readonly id: number;
+    readonly name: number;
 }
 
 export class ToDoListModel implements ToDoListProps
 {
-    readonly id: number;
+    readonly name: number;
 
     toDoListValidatorService: ToDoListValidatorService;
     dateService: DateService;
@@ -28,7 +28,7 @@ export class ToDoListModel implements ToDoListProps
     items: ItemModel[];
 
     constructor(toDoListProps: ToDoListProps) {
-        this.id = toDoListProps.id;
+        this.name = toDoListProps.name;
 
         this.toDoListValidatorService = new ToDoListValidatorService();
         this.dateService = new DateService();
@@ -81,7 +81,7 @@ export class ToDoListModel implements ToDoListProps
     }
 }
 
-export interface ToDoListCreationProps extends Optional<ToDoListProps, "id"> {}
+export interface ToDoListCreationProps extends Optional<ToDoListProps, "name"> {}
 
 export interface ToDoListInstance extends Model<ToDoListProps, ToDoListCreationProps>, ToDoListProps
 {
@@ -94,10 +94,10 @@ export interface ToDoListInstance extends Model<ToDoListProps, ToDoListCreationP
 export default function (sequelize: Sequelize): ModelCtor<ToDoListInstance>
 {
     return sequelize.define<ToDoListInstance>("ToDoList", {
-        id: {
-            type: DataTypes.BIGINT,
+        name: {
+            type: DataTypes.STRING,
             primaryKey: true,
-            autoIncrement: true
+            allowNull: false
         }
     },{
         freezeTableName: true,

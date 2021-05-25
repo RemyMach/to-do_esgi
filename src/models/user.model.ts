@@ -70,7 +70,7 @@ export interface UserInstance extends Model<UserProps, UserCreationProps>, UserP
     addSession: HasManyAddAssociationMixin<SessionInstance, "id">;
     getSessions: HasManyGetAssociationsMixin<SessionInstance>;
 
-    addToDoList: HasManyAddAssociationMixin<ToDoListInstance, "id">;
+    addToDoList: HasManyAddAssociationMixin<ToDoListInstance, "name">;
     getToDoLists: HasManyGetAssociationsMixin<ToDoListInstance>;
 }
 
