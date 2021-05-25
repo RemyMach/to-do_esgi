@@ -46,11 +46,11 @@ export class ItemModel implements ItemProps {
 export interface ItemCreationProps extends Optional<ItemProps, "id"> {}
 
 export interface ItemInstance extends Model<ItemProps, ItemCreationProps>, ItemProps {
-    getList: BelongsToGetAssociationMixin<ToDoListInstance>;
-    setList: BelongsToSetAssociationMixin<ToDoListInstance, "id">;
+    setToDoList: BelongsToSetAssociationMixin<ToDoListInstance, "id">;
+    getToDoList: BelongsToGetAssociationMixin<ToDoListInstance>;
 }
 
-export default function(sequelize: Sequelize): ModelCtor<ItemInstance> {
+export default function (sequelize: Sequelize): ModelCtor<ItemInstance> {
     return sequelize.define<ItemInstance>("Item", {
         id: {
             type: DataTypes.BIGINT,
