@@ -8,13 +8,13 @@ export async function fillTables(): Promise<void> {
 
     const userFixture = await UserFixture.getInstance();
     const sessionFixture = await SessionFixture.getInstance();
-    const itemFixture = await ItemFixture.getInstance();
     const toDoListFixture = await ToDoListFixture.getInstance();
+    const itemFixture = await ItemFixture.getInstance();
 
     await userFixture.fillTable();
     await sessionFixture.fillTable();
-    await itemFixture.fillTable();
     await toDoListFixture.fillTable();
+    await itemFixture.fillTable();
 }
 
 export async function destroyTablesElement(): Promise<void> {

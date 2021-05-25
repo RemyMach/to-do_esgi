@@ -70,8 +70,8 @@ export interface UserInstance extends Model<UserProps, UserCreationProps>, UserP
     addSession: HasManyAddAssociationMixin<SessionInstance, "id">;
     getSessions: HasManyGetAssociationsMixin<SessionInstance>;
 
-    getToDoList: HasManyGetAssociationsMixin<ToDoListInstance>;
     addToDoList: HasManyAddAssociationMixin<ToDoListInstance, "id">;
+    getToDoLists: HasManyGetAssociationsMixin<ToDoListInstance>;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<UserInstance> {

@@ -5,7 +5,6 @@ import {
     Optional,
     ModelCtor,
     HasManyGetAssociationsMixin,
-    HasManySetAssociationsMixin,
     BelongsToSetAssociationMixin,
     BelongsToGetAssociationMixin
 } from "sequelize";
@@ -86,8 +85,7 @@ export interface ToDoListCreationProps extends Optional<ToDoListProps, "id"> {}
 
 export interface ToDoListInstance extends Model<ToDoListProps, ToDoListCreationProps>, ToDoListProps
 {
-    setItem: HasManySetAssociationsMixin<ItemInstance, "id">;
-    AddItems: HasManyGetAssociationsMixin<ItemInstance>;
+    getItems: HasManyGetAssociationsMixin<ItemInstance>;
 
     setUser: BelongsToSetAssociationMixin<UserInstance, "id">;
     getUser: BelongsToGetAssociationMixin<UserInstance>;

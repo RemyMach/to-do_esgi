@@ -20,7 +20,7 @@ export class ToDoListFixture implements fixture
     
     public async fillTable(): Promise<void> {
         const manager = await SequelizeManager.getInstance();
-        const userFixture = await UserFixture.getInstance()
+        const userFixture = await UserFixture.getInstance();
 
         this.todo_list_for_user_remy = await manager.toDoList.create({
             id: 1
