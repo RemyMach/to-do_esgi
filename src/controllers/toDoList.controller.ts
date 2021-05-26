@@ -1,7 +1,7 @@
 import {ModelCtor} from "sequelize";
 import {UserInstance} from "../models/user.model";
 import {SequelizeManager} from "../models";
-import {ToDoListInstance} from "../models/toDoList.model";
+import {ToDoListCreationProps, ToDoListInstance} from "../models/toDoList.model";
 import {ItemInstance} from "../models/item.model";
 
 export class ToDoListController
@@ -24,6 +24,15 @@ export class ToDoListController
         this.toDoList = toDoList;
         this.user = user;
         this.item = item;
+    }
+
+    public async addToDoListToUser(user: UserInstance, todolist: ToDoListCreationProps): Promise<ToDoListInstance | null>
+    {
+        const toDoListInstance = await this.toDoList.create({
+            ...todolist
+        });
+        toDoListInstance.setUser(user);
+        return toDoListInstance;
     }
 
     public async getToDoListById(id: number): Promise<ToDoListInstance | null>
