@@ -2,7 +2,7 @@ import {ModelCtor} from "sequelize";
 import {UserInstance} from "../models/user.model";
 import {SequelizeManager} from "../models";
 import {ToDoListCreationProps, ToDoListInstance} from "../models/toDoList.model";
-import {ItemCreationProps, ItemInstance} from "../models/item.model";
+import {ItemCreationProps, ItemInstance, ItemModel} from "../models/item.model";
 
 export class ToDoListController
 {
@@ -80,5 +80,22 @@ export class ToDoListController
                 }
             }
         });
+    }
+
+    public async getAndConvertItemInstancesToItemModels(toDoListId: number): Promise<ItemModel[] | null>
+    {
+        const itemInstances = await this.getToDoListItemsWithToDoListId(toDoListId);
+        if(itemInstances === null){
+            return null;
+        }
+        return itemInstances.map(function (itemInstance) {
+            return new ItemModel(
+                itemInstance.id,
+                itemInstance.content,
+                itemInstance.createdAt,
+                itemInstance.name
+
+            )
+        })
     }
 }

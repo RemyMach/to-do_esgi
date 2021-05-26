@@ -23,20 +23,20 @@ export class ToDoListModel implements ToDoListProps
 {
     readonly id: number;
     name: string;
+    items: ItemModel[];
 
     toDoListValidatorService: ToDoListValidatorService;
     dateService: DateService;
     emailService: EmailService;
-    items: ItemModel[];
 
-    constructor(toDoListProps: ToDoListProps) {
-        this.id = toDoListProps.id;
-        this.name = toDoListProps.name;
+    constructor(id: number, name: string, items: ItemModel[]) {
+        this.id = id;
+        this.name = name;
+        this.items = items;
 
         this.toDoListValidatorService = new ToDoListValidatorService();
         this.dateService = new DateService();
         this.emailService = new EmailService();
-        this.items = [];
     }
 
     public getItem(name: string): ItemModel | null
