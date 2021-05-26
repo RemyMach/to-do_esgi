@@ -26,7 +26,7 @@ authRouter.post("/subscribe",[
     body('password')
         .trim()
         .isLength({ min: 8, max: 40 })
-        .withMessage('le mot de passe doit-être entre 8 et 40 carractères'),
+        .withMessage('le mot de passe doit-être entre 8 et 40 caractères'),
     validateBodyBirthDate
     ],
     async function(req: Request, res: Response) {
