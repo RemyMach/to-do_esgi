@@ -23,7 +23,8 @@ export class ToDoListFixture implements fixture
         const userFixture = await UserFixture.getInstance();
 
         this.todo_list_for_user_remy = await manager.toDoList.create({
-            id: 1
+            id: 1,
+            name: "My todo list, don't touch it you son of your mom"
         });
         this.todo_list_for_user_remy.setUser(userFixture.user_remy);
     }
