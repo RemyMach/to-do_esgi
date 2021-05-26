@@ -46,7 +46,7 @@ export class ItemModel implements ItemProps {
 export interface ItemCreationProps extends Optional<ItemProps, "id"> {}
 
 export interface ItemInstance extends Model<ItemProps, ItemCreationProps>, ItemProps {
-    setToDoList: BelongsToSetAssociationMixin<ToDoListInstance, "name">;
+    setToDoList: BelongsToSetAssociationMixin<ToDoListInstance, "id">;
     getToDoList: BelongsToGetAssociationMixin<ToDoListInstance>;
 }
 

@@ -64,7 +64,7 @@ export class SequelizeManager implements SequelizeManagerProps {
         props.toDoList.belongsTo(props.user, {foreignKey: 'user_id'});
 
         props.toDoList.hasMany(props.item);
-        props.item.belongsTo(props.toDoList, {foreignKey: 'to_do_list_name'});
+        props.item.belongsTo(props.toDoList, {foreignKey: 'to_do_list_id'});
     }
 
     private constructor(props: SequelizeManagerProps) {
