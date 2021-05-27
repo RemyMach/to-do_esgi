@@ -1,13 +1,10 @@
 import express, {Request, Response} from "express";
-import {AuthController} from "../controllers/auth.controller";
 import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
-import {validateBodyBirthDate} from "../middlewares/auth.middleware";
 import {ValidationError} from "sequelize";
 import {UserController} from "../controllers/user.controller";
 import {ToDoListController} from "../controllers/toDoList.controller";
-import {validateItemCreation} from "../middlewares/item.middleware";
 
 const toDoListRouter = express.Router();
 
@@ -19,8 +16,7 @@ toDoListRouter.post("/user/add",[
         body('list_name')
             .trim()
             .isLength({ min: 1 })
-            .withMessage('le lastName ne peut pas être vide'),
-        validateItemCreation
+            .withMessage('lastName ne peut pas être vide')
     ],
     async function(req: Request, res: Response) {
 
