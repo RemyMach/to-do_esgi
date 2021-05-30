@@ -8,6 +8,9 @@ import {validateItemCreation} from "../middlewares/item.middleware";
 const itemRouter = express.Router();
 
 itemRouter.post("/",[
+        body('toDoListId')
+            .trim()
+            .isNumeric(),
         body('name')
             .trim()
             .isLength({ min: 1 })
@@ -26,6 +29,7 @@ itemRouter.post("/",[
 
         const errors = validationResult(req).array();
         if(res.locals.errors) {
+            errors.push(res.locals.errors.toDoListId);
             errors.push(res.locals.errors.name);
             errors.push(res.locals.errors.content);
             errors.push(res.locals.errors.createdAt);
@@ -35,11 +39,12 @@ itemRouter.post("/",[
             throw new InvalidInput(errors);
         }
 
-        const {name, content, createdAt} = req.body;
+        const {toDoListId, name, content, createdAt} = req.body;
 
         const itemController = await ItemController.getInstance();
         try {
             const item = await itemController.createItem(
+                toDoListId,
                 name,
                 content,
                 createdAt

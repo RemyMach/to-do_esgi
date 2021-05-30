@@ -1,5 +1,6 @@
 import {ModelCtor} from "sequelize";
 import {ItemInstance, ItemCreationProps} from "../models/item.model";
+import {ToDoListController} from "../controllers/toDoList.controller";
 import {SequelizeManager} from "../models";
 
 export class ItemController {
@@ -30,11 +31,22 @@ export class ItemController {
         });
     }
 
-    public async createItem(name: string, content: string, createdAt: Date): Promise<ItemInstance | null> {
-        return await this.item.create({
+    public async createItem(toDoListId: number, name: string, content: string, createdAt: Date): Promise<ItemInstance | null> {
+        let toDoListController = await ToDoListController.getInstance();
+        let toDoList = await toDoListController.getToDoListById(toDoListId);
+
+        if (toDoList == null) {
+            return null;
+        }
+
+        let item = await this.item.create({
             name,
             content,
             createdAt
         });
+
+        item.setToDoList(toDoList);
+
+        return item;
     }
 }
