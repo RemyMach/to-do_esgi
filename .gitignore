@@ -108,4 +108,5 @@ dist
 .idea
 
 # env files
+dev.env
 test.env
