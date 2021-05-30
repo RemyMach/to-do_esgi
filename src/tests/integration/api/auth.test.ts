@@ -138,7 +138,7 @@ describe('Determine the auth routes behavior', () => {
         });
 
         it('should  return 400 because password is not provide', async () => {
-            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 carractères' ]  };
+            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 caractères' ]  };
             const response = await request(app).post('/auth/subscribe')
                 .send({
                     firstName: "remy",
@@ -156,7 +156,7 @@ describe('Determine the auth routes behavior', () => {
         });
 
         it('should  return 400 because password have less than 8 characters', async () => {
-            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 carractères' ]  };
+            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 caractères' ]  };
             const response = await request(app).post('/auth/subscribe')
                 .send({
                     firstName: "remy",
@@ -175,7 +175,7 @@ describe('Determine the auth routes behavior', () => {
         });
 
         it('should  return 400 because password have more than 40 characters', async () => {
-            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 carractères' ]  };
+            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 caractères' ]  };
             const response = await request(app).post('/auth/subscribe')
                 .send({
                     firstName: "remy",
