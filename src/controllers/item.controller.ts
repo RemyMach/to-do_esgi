@@ -49,4 +49,16 @@ export class ItemController {
 
         return item;
     }
+
+    public async deleteItem(id: number): Promise<boolean> {
+        await this.item.destroy({
+            where: {
+                id
+            }
+        });
+
+        let item = await this.getItemById(id);
+
+        return item == null;
+    }
 }

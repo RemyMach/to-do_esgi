@@ -30,24 +30,6 @@ export async function validateItemCreation(req: express.Request, res: express.Re
             msg: 'le paramètre toDoListId ne peux pas être manquant',
         };
         next();
-    }else if(!itemValidatorService.isNameNotEmpty(name)) {
-        res.locals.errors = {};
-        res.locals.errors.name = {
-            location: 'body',
-            value: 'name',
-            param: 'name',
-            msg: 'le champs name ne peux pas être vide',
-        };
-        next();
-    }else if(!itemValidatorService.isContentValid(content)) {
-        res.locals.errors = {};
-        res.locals.errors.content = {
-            location: 'body',
-            value: 'content',
-            param: 'content',
-            msg: 'le champs content doit contenir un minimum de 1 caractères et un maximum de 1000 caractères',
-        };
-        next();
     }else if(!itemValidatorService.isCreatedDateValid(creationDate)) {
         res.locals.errors = {};
         res.locals.errors.createdAt = {
