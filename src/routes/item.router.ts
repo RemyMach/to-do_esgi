@@ -19,7 +19,7 @@ itemRouter.get("/:id", async function(req: Request, res: Response) {
         const item = await itemController.getItemById(id);
 
         if (item != null) {
-            return res.status(201)
+            return res.status(200)
                 .json(item)
                 .end();
         } else {

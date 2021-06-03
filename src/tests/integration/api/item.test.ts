@@ -153,10 +153,10 @@ describe('Determine the item route behavior', () => {
                 .expect(500);
         });
 
-        it('should return 201', async () => {
+        it('should return 200', async () => {
             const response = await request(app).get('/item/1')
                 //test status
-                .expect(201);
+                .expect(200);
 
             //test item is in the db
             const item = await itemController.getItemById(1);
