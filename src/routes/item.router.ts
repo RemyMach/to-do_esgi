@@ -1,6 +1,5 @@
 import express, {NextFunction, Request, Response} from "express";
 import {ItemController} from "../controllers/item.controller";
-import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
 import {validateItemCreation} from "../middlewares/item.middleware";
@@ -79,7 +78,7 @@ itemRouter.post("/",[
 
             if (item != null) {
                 return res.status(201)
-                    .json(item)
+                    .json({id: item.id, name: item.name, content: item.content})
                     .end();
             } else {
                 return res.status(500)
