@@ -1,12 +1,12 @@
 import express, {NextFunction, Request, Response} from "express";
 import {AuthController} from "../controllers/auth.controller";
-import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
 import {authMiddleware, validateBodyBirthDate} from "../middlewares/auth.middleware";
 import validator from "validator";
 import {SessionInstance} from "../models/session.model";
 import {ValidationError} from "sequelize";
+import 'express-async-errors';
 
 const authRouter = express.Router();
 

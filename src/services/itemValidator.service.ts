@@ -19,4 +19,8 @@ export class ItemValidatorService {
     isCreatedDateValid(createdDate: Date): boolean {
         return createdDate <= new Date();
     }
+
+    isToDoListIdValid(toDoListId: number): boolean {
+        return toDoListId >= 0;
+    }
 }

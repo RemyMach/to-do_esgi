@@ -1,5 +1,4 @@
 import express, {Request, Response} from "express";
-import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
 import {ValidationError} from "sequelize";

@@ -26,7 +26,6 @@ export class ItemModel implements ItemProps {
 
     itemValidator: ItemValidatorService;
 
-
     constructor(id: number, content: string, createdAt: Date, name: string) {
         this.id = id;
         this.content = content;
