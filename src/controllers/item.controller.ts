@@ -61,4 +61,8 @@ export class ItemController {
 
         return item == null;
     }
+
+    public async countItems(): Promise<number> {
+        return await this.item.count();
+    }
 }

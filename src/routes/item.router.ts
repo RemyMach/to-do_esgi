@@ -11,8 +11,9 @@ const itemRouter = express.Router();
 itemRouter.get("/:id", async function(req: Request, res: Response) {
         const id = req.params.id ? Number.parseInt(req.params.id as string) : undefined;
 
-        if (id === undefined) {
-            throw new InvalidInput();
+        if (id == undefined || isNaN(id)) {
+            return res.status(400)
+                .end();
         }
 
         const itemController = await ItemController.getInstance();
@@ -23,7 +24,7 @@ itemRouter.get("/:id", async function(req: Request, res: Response) {
                 .json(item)
                 .end();
         } else {
-            return res.status(404)
+            return res.status(400)
                 .end();
         }
     }
@@ -101,15 +102,16 @@ itemRouter.post("/",[
 itemRouter.delete("/:id", async function(req: Request, res: Response) {
         const id = req.params.id ? Number.parseInt(req.params.id as string) : undefined;
 
-        if (id === undefined) {
-            throw new InvalidInput();
+        if (id === undefined || isNaN(id)) {
+            return res.status(400)
+                .end();
         }
 
         const itemController = await ItemController.getInstance();
         const item = await itemController.getItemById(id);
 
         if (item === null) {
-            return res.status(404)
+            return res.status(400)
                 .end();
         }
 
@@ -119,7 +121,7 @@ itemRouter.delete("/:id", async function(req: Request, res: Response) {
             return res.status(200)
                 .end();
         } else {
-            return res.status(500)
+            return res.status(400)
                 .end();
         }
     }
