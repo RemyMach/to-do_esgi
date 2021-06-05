@@ -24,7 +24,7 @@ describe('Determine the item route behavior', () => {
         toDoListController = await ToDoListController.getInstance();
 
         user = (await userController.getUserByEmail("jean@pomme.fr"))!;
-        toDoListId = Number((await toDoListController.addToDoListToUser(user, "test-items"))!.getDataValue("id"));
+        toDoListId = 1;
     });
 
     beforeEach( async (done) => {

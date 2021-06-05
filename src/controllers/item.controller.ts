@@ -34,7 +34,6 @@ export class ItemController {
     public async createItem(toDoListId: number, name: string, content: string, createdAt: Date): Promise<ItemInstance | null> {
         let toDoListController = await ToDoListController.getInstance();
         let toDoList = await toDoListController.getToDoListById(toDoListId);
-
         if (toDoList == null) {
             return null;
         }

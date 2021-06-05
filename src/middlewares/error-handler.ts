@@ -10,6 +10,7 @@ const errorHandler = (
     if (err instanceof BaseCustomError) {
         return res.status(err.getStatusCode()).send(err.serializeErrorOutput());
     }
+    console.log(err);
     return res.status(500);
 };
 

@@ -78,11 +78,13 @@ itemRouter.post("/",[
                 createdAt
             );
 
+
             if (item != null) {
                 return res.status(201)
                     .json({id: item.id, name: item.name, content: item.content})
                     .end();
             } else {
+
                 return res.status(500)
                     .end();
             }
