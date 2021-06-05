@@ -11,6 +11,7 @@ import {destroyTablesElement, fillTables} from "../../fixtures";
 describe('Determine the item route behavior', () => {
 
     let errorParam: any;
+    let itemCount: number;
 
     let userController: UserController;
     let toDoListController: ToDoListController;
@@ -44,6 +45,11 @@ describe('Determine the item route behavior', () => {
             done();
         });
 
+        beforeEach(async (done) => {
+            itemCount = await itemController.countItems();
+            done();
+        });
+
         it('should return 400 because toDoListId is null', async () => {
             errorParam['errors'][0]['fields'] = { toDoListId: [ 'le paramètre toDoListId ne peux pas être manquant' ]};
             const response = await request(app).post('/item')
@@ -58,6 +64,7 @@ describe('Determine the item route behavior', () => {
 
             //test return body
             expect(response.body).toEqual(errorParam);
+            expect(itemCount).toBe(await itemController.countItems());
         });
 
         it('should return 400 because name is empty', async () => {
@@ -74,6 +81,7 @@ describe('Determine the item route behavior', () => {
 
             //test return body
             expect(response.body).toEqual(errorParam);
+            expect(itemCount).toBe(await itemController.countItems());
         });
 
         it('should return 400 because content is empty', async () => {
@@ -90,6 +98,7 @@ describe('Determine the item route behavior', () => {
 
             //test return body
             expect(response.body).toEqual(errorParam);
+            expect(itemCount).toBe(await itemController.countItems());
         });
 
         it('should return 400 because creation date is null', async () => {
@@ -106,6 +115,7 @@ describe('Determine the item route behavior', () => {
 
             //test return body
             expect(response.body).toEqual(errorParam);
+            expect(itemCount).toBe(await itemController.countItems());
         });
 
         it('should return 201', async () => {
@@ -122,6 +132,7 @@ describe('Determine the item route behavior', () => {
             //test item is in the db
             const item = await itemController.getItemById(response.body.id);
             expect(item).not.toBeNull();
+            expect(itemCount ).not.toBe(await itemController.countItems());
         });
 
     });
@@ -174,22 +185,30 @@ describe('Determine the item route behavior', () => {
             done();
         });
 
+        beforeEach(async (done) => {
+            itemCount = await itemController.countItems();
+            done();
+        });
+
         it('should return 404 because no item id are provided', async () => {
             const response = await request(app).delete('/item/').send()
                 //test status
                 .expect(404);
+            expect(itemCount).toBe(await itemController.countItems());
         });
 
         it('should return 400 because item doesn\'t exist', async () => {
             const response = await request(app).delete('/item/-1').send()
                 //test status
                 .expect(400);
+            expect(itemCount).toBe(await itemController.countItems());
         });
 
         it('should return 400 because item id is not a number', async () => {
             const response = await request(app).delete('/item/zero').send()
                 //test status
                 .expect(400);
+            expect(itemCount).toBe(await itemController.countItems());
         });
 
         it('should return 200', async () => {
@@ -200,6 +219,7 @@ describe('Determine the item route behavior', () => {
             //test item is in the db
             const item = await itemController.getItemById(1);
             expect(item).toBeNull();
+            expect(itemCount - 1).toBe(await itemController.countItems());
         });
 
     });
