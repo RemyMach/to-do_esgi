@@ -272,7 +272,7 @@ describe('Determine the auth routes behavior', () => {
             expect(user).not.toBeNull();
         });
 
-        it('should return 200 beacause all parameters are good', async () => {
+        it('should return 200 because all parameters are good', async () => {
             const validParam = {
                     "firstName": "remy",
                     "lastName": "pomme",
