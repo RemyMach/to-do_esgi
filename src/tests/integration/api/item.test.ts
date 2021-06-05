@@ -136,25 +136,25 @@ describe('Determine the item route behavior', () => {
         });
 
         it('should return 404 because no item id are provided', async () => {
-            const response = await request(app).get('/item/')
+            const response = await request(app).get('/item/').send()
                 //test status
                 .expect(404);
         });
 
-        it('should return 404 because item doesn\'t exist', async () => {
-            const response = await request(app).get('/item/-1')
+        it('should return 400 because item doesn\'t exist', async () => {
+            const response = await request(app).get('/item/-1').send()
                 //test status
-                .expect(404);
+                .expect(400);
         });
 
-        it('should return 500 because item id is not a number', async () => {
-            const response = await request(app).get('/item/zero')
+        it('should return 400 because item id is not a number', async () => {
+            const response = await request(app).get('/item/zero').send()
                 //test status
-                .expect(500);
+                .expect(400);
         });
 
         it('should return 200', async () => {
-            const response = await request(app).get('/item/1')
+            const response = await request(app).get('/item/1').send()
                 //test status
                 .expect(200);
 
@@ -175,25 +175,25 @@ describe('Determine the item route behavior', () => {
         });
 
         it('should return 404 because no item id are provided', async () => {
-            const response = await request(app).delete('/item/')
+            const response = await request(app).delete('/item/').send()
                 //test status
                 .expect(404);
         });
 
-        it('should return 404 because item doesn\'t exist', async () => {
-            const response = await request(app).delete('/item/-1')
+        it('should return 400 because item doesn\'t exist', async () => {
+            const response = await request(app).delete('/item/-1').send()
                 //test status
-                .expect(404);
+                .expect(400);
         });
 
-        it('should return 500 because item id is not a number', async () => {
-            const response = await request(app).delete('/item/zero')
+        it('should return 400 because item id is not a number', async () => {
+            const response = await request(app).delete('/item/zero').send()
                 //test status
-                .expect(500);
+                .expect(400);
         });
 
         it('should return 200', async () => {
-            const response = await request(app).delete('/item/1')
+            const response = await request(app).delete('/item/1').send()
                 //test status
                 .expect(200);
 
