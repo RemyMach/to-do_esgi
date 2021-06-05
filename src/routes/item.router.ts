@@ -1,5 +1,6 @@
 import express, {NextFunction, Request, Response} from "express";
 import {ItemController} from "../controllers/item.controller";
+import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
 import {validateItemCreation} from "../middlewares/item.middleware";

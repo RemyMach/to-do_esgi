@@ -7,7 +7,6 @@ const errorHandler = (
     res: Response,
     _next: NextFunction
 ) => {
-    console.log(err);
     if (err instanceof BaseCustomError) {
         return res.status(err.getStatusCode()).send(err.serializeErrorOutput());
     }
