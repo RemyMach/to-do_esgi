@@ -10,7 +10,7 @@ describe("Test to validate ToDoList addNewItem method", () => {
     let newItem: ItemModel;
 
     beforeEach(() => {
-        toDoList = new ToDoListModel();
+        toDoList = new ToDoListModel(1, "Test list",  []);
         newItem = new ItemModel(0, "Test", new Date(19, 1, 2000), "Me");
         ToDoListValidatorService.prototype.getNumberOfItem = jest.fn().mockImplementation(() => {
             return 0;
@@ -53,7 +53,7 @@ describe("Test to validate ToDoList addNewItem method", () => {
         expect(EmailService.prototype.sendEmail).toBeCalledTimes(0);
     });
 
-    it("If item list is not empty but the new item pass all condition he should be added and with 8 items in the list an email should be sended", async () => {
+    it("If item list is not empty but the new item pass all condition he should be added and with 8 items in the list an email should be sent", async () => {
         ToDoListValidatorService.prototype.itemsIsEmpty = jest.fn().mockImplementation(() => {
             return false;
         });

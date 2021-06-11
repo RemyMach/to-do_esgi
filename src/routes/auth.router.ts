@@ -1,12 +1,12 @@
 import express, {NextFunction, Request, Response} from "express";
 import {AuthController} from "../controllers/auth.controller";
-import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import InvalidInput from "../errors/invalid-input";
 import {authMiddleware, validateBodyBirthDate} from "../middlewares/auth.middleware";
 import validator from "validator";
 import {SessionInstance} from "../models/session.model";
 import {ValidationError} from "sequelize";
+import 'express-async-errors';
 
 const authRouter = express.Router();
 
@@ -26,7 +26,7 @@ authRouter.post("/subscribe",[
     body('password')
         .trim()
         .isLength({ min: 8, max: 40 })
-        .withMessage('le mot de passe doit-être entre 8 et 40 carractères'),
+        .withMessage('le mot de passe doit-être entre 8 et 40 caractères'),
     validateBodyBirthDate
     ],
     async function(req: Request, res: Response) {

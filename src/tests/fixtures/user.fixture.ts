@@ -1,6 +1,7 @@
 import {SequelizeManager} from "../../models";
 import {UserInstance} from "../../models/user.model";
 import {fixture} from "./fixture";
+import {ToDoListFixture} from "./toDoList.fixture";
 
 
 export class UserFixture implements fixture{
@@ -36,7 +37,6 @@ export class UserFixture implements fixture{
             password: "azertyuiop",
             birthDate: birthDateValid
         });
-
 
         this.user_jean = await manager.user.create({
             firstName: "jean",

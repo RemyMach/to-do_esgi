@@ -7,11 +7,11 @@ const errorHandler = (
     res: Response,
     _next: NextFunction
 ) => {
-    
     if (err instanceof BaseCustomError) {
         return res.status(err.getStatusCode()).send(err.serializeErrorOutput());
     }
-    return res.status(500).send().end();
+    console.log(err);
+    return res.status(500);
 };
 
 export default errorHandler;

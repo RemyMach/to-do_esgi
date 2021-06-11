@@ -138,7 +138,7 @@ describe('Determine the auth routes behavior', () => {
         });
 
         it('should  return 400 because password is not provide', async () => {
-            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 carractères' ]  };
+            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 caractères' ]  };
             const response = await request(app).post('/auth/subscribe')
                 .send({
                     firstName: "remy",
@@ -156,7 +156,7 @@ describe('Determine the auth routes behavior', () => {
         });
 
         it('should  return 400 because password have less than 8 characters', async () => {
-            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 carractères' ]  };
+            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 caractères' ]  };
             const response = await request(app).post('/auth/subscribe')
                 .send({
                     firstName: "remy",
@@ -175,7 +175,7 @@ describe('Determine the auth routes behavior', () => {
         });
 
         it('should  return 400 because password have more than 40 characters', async () => {
-            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 carractères' ]  };
+            errorParam['errors'][0]['fields'] = { password: [ 'le mot de passe doit-être entre 8 et 40 caractères' ]  };
             const response = await request(app).post('/auth/subscribe')
                 .send({
                     firstName: "remy",
@@ -361,7 +361,7 @@ describe('Determine the auth routes behavior', () => {
 
         });
 
-        it('should return 400 because the password is not filled', async () => {
+        it('should return 400 because the password is empty', async () => {
             errorParam['errors'][0]['fields'] = {  password: ["Invalid value"]};
 
             const sessions = await sessionController.getAllSessions();
@@ -369,7 +369,8 @@ describe('Determine the auth routes behavior', () => {
 
             const response = await request(app).post('/auth/login')
                 .send({
-                    email: 'jean@pomme.fr'
+                    email: 'jean@pomme.fr',
+                    password: ""
                 })
                 //test status
                 .expect(400);
@@ -544,24 +545,6 @@ describe('Determine the auth routes behavior', () => {
 
             });
 
-            it('should return 403 because the header for authorization have Bearer but a bad token', async () => {
-
-                const sessions = await sessionController.getAllSessions();
-                const numberSessions = sessions.length;
-
-                const response = await request(app).delete('/auth/logout')
-                    .set('Authorization', `Bearer fghjjhgcvbhjgfcghvjhgjkhijs`)
-                    .send()
-                    //test status
-                    .expect(403);
-
-                //test return body
-                expect(response.body).toEqual({});
-
-                //test session table have the same number of element
-                expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
-
-            });
 
             it('should return 204 because the header for authorization have a valid Bearer', async () => {
 

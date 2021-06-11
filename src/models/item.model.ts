@@ -1,11 +1,14 @@
 import {
-    DataTypes, HasOneGetAssociationMixin,
+    BelongsToGetAssociationMixin,
+    BelongsToSetAssociationMixin,
+    DataTypes,
     Model,
     ModelCtor,
     Optional,
     Sequelize
 } from "sequelize";
 import {ItemValidatorService} from '../services/itemValidator.service';
+import {ToDoListInstance} from "./toDoList.model";
 
 interface ItemProps {
     readonly id: number;
@@ -22,7 +25,6 @@ export class ItemModel implements ItemProps {
     name: string;
 
     itemValidator: ItemValidatorService;
-
 
     constructor(id: number, content: string, createdAt: Date, name: string) {
         this.id = id;
@@ -43,10 +45,11 @@ export class ItemModel implements ItemProps {
 export interface ItemCreationProps extends Optional<ItemProps, "id"> {}
 
 export interface ItemInstance extends Model<ItemProps, ItemCreationProps>, ItemProps {
-    // getList: HasOneGetAssociationMixin<ToDoListInstance>;
+    setToDoList: BelongsToSetAssociationMixin<ToDoListInstance, "id">;
+    getToDoList: BelongsToGetAssociationMixin<ToDoListInstance>;
 }
 
-export default function(sequelize: Sequelize): ModelCtor<ItemInstance> {
+export default function (sequelize: Sequelize): ModelCtor<ItemInstance> {
     return sequelize.define<ItemInstance>("Item", {
         id: {
             type: DataTypes.BIGINT,

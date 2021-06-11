@@ -14,7 +14,7 @@ describe("Tests to validate the toDoList service", () => {
     beforeEach(() => {
         dateService = new DateService();
         toDoListValidatorService = new ToDoListValidatorService();
-        toDoList = new ToDoListModel();
+        toDoList = new ToDoListModel(1, "list test", []);
         itemCreationDate = new Date();
         itemCreationDate.setUTCFullYear(itemCreationDate.getFullYear() - 5);
         newItem = new ItemModel(0, "Test", itemCreationDate, "Me");

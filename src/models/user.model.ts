@@ -1,6 +1,8 @@
 import {
     CreateOptions,
-    DataTypes, HasManyAddAssociationMixin, HasManyGetAssociationsMixin,
+    DataTypes,
+    HasManyAddAssociationMixin,
+    HasManyGetAssociationsMixin,
     Model,
     ModelCtor,
     Optional,
@@ -8,6 +10,7 @@ import {
 } from "sequelize";
 import {SessionInstance, SessionProps} from "./session.model";
 import {hash} from "bcrypt";
+import {ToDoListInstance} from "./toDoList.model";
 
 interface UserProps {
     readonly id: number;
@@ -66,6 +69,9 @@ export interface UserCreationProps extends Optional<UserProps, "id"> {}
 export interface UserInstance extends Model<UserProps, UserCreationProps>, UserProps {
     addSession: HasManyAddAssociationMixin<SessionInstance, "id">;
     getSessions: HasManyGetAssociationsMixin<SessionInstance>;
+
+    addToDoList: HasManyAddAssociationMixin<ToDoListInstance, "id">;
+    getToDoLists: HasManyGetAssociationsMixin<ToDoListInstance>;
 }
 
 export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
@@ -103,7 +109,7 @@ export default function(sequelize: Sequelize): ModelCtor<UserInstance> {
             validate: {
                 len: {
                     args: [8, 40],
-                    msg: "le mot de passe doit-être compris entre 8 et 40 carractères inclus"
+                    msg: "le mot de passe doit-être compris entre 8 et 40 caractères inclus"
                 }
             }
         },
