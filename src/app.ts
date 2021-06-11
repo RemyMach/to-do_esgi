@@ -4,6 +4,7 @@ import 'express-async-errors';
 import {errorHandler} from "./middlewares";
 
 const app = express();
+console.log("jean");
 
 app.use(express.json());
 
