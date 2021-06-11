@@ -71,12 +71,12 @@ export class ToDoListController
     public async getToDoListItemsWithToDoListId(id: number): Promise<ItemInstance[] | null>
     {
         return await this.item.findAll({
-            attributes: ['id', 'name', 'content'],
+            attributes: ['id', 'name', 'content', 'createdAt'],
             include: {
                 model: this.toDoList,
                 required: true,
                 where: {
-                    user: id
+                    id
                 }
             }
         });
