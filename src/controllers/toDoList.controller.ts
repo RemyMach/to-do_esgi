@@ -62,7 +62,7 @@ export class ToDoListController
                 model: this.user,
                 required: true,
                 where: {
-                    user: user_id
+                    id: user_id
                 }
             }
         });
