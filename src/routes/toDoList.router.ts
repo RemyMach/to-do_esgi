@@ -4,10 +4,13 @@ import InvalidInput from "../errors/invalid-input";
 import {ValidationError} from "sequelize";
 import {UserController} from "../controllers/user.controller";
 import {ToDoListController} from "../controllers/toDoList.controller";
+import {authMiddleware} from "../middlewares/auth.middleware";
 
 const toDoListRouter = express.Router();
 
-toDoListRouter.post("/user/add",[
+toDoListRouter.post("/user/add",
+    authMiddleware,
+    [
         body('user_email')
             .isEmail()
             .withMessage('le mail n\'est pas un mail valide')
