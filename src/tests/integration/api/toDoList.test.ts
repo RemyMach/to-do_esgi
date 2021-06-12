@@ -4,18 +4,23 @@ import {ToDoListController} from "../../../controllers/toDoList.controller";
 import app from "../../../app";
 import request from "supertest";
 import {SessionFixture} from "../../fixtures/session.fixture";
+import {SessionController} from "../../../controllers/session.controller";
 
 describe('Determine the todo list routes behavior', () => {
 
     let errorParam: any;
     let userController: UserController;
     let toDoListController: ToDoListController;
-
     let sessionFixture: SessionFixture;
+    let sessionController: SessionController;
 
     beforeAll(async (done) => {
+        errorParam = {
+            errors: [ { message: 'The input provided is invalid' } ]
+        }
         userController = await UserController.getInstance();
         toDoListController = await ToDoListController.getInstance();
+        sessionController = await SessionController.getInstance();
         done();
     });
 
@@ -31,90 +36,186 @@ describe('Determine the todo list routes behavior', () => {
         done();
     });
 
-    describe('Test the creation of a todo list to a user', () => {
-        // TODO: jean pomme isn't added to his todo list
-        it('should return 201 because all parameters are good', async () => {
+    describe('Test the creation of a todo list to a user', async () =>
+    {
+        it('should return 201 because all parameters are good', async () =>
+        {
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jean@pomme.fr';
+            const list_name = 'test list';
             const token = sessionFixture.session_user_jean?.token;
-            await request(app).post('/toDoList/user/add')
+
+            const response = await request(app).post('/toDoList/user/add')
                 .set('Authorization', `Bearer ${token}`)
                 .send({
-                    user_email: 'jean@pomme.fr',
-                    list_name: 'test list'
+                    user_email,
+                    list_name
                 })
                 .expect(201);
+
+            expect(response.body).toHaveProperty('toDoList');
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists + 1);
         });
 
-        it('should return 401 because user session is not provide', async () => {
-            await request(app).post('/toDoList/user/add')
+        it('should return 401 because user session is not provide', async () =>
+        {
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jean@pomme.fr';
+            const list_name = 'test list';
+
+            const response = await request(app).post('/toDoList/user/add')
                 .send({
-                    user_email: 'jean@pomme.fr',
-                    list_name: 'test list'
+                    user_email,
+                    list_name
                 })
                 .expect(401);
+
+            expect(response.body).toEqual({});
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
         });
 
-        it('should return 400 because list_name is not provide', async () => {
+        it('should return 400 because list_name is not provide', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { list_name: [ 'lastName ne peut pas être vide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jean@pomme.fr';
             const token = sessionFixture.session_user_jean?.token;
-            await request(app).post('/toDoList/user/add')
+
+            const response = await request(app).post('/toDoList/user/add')
                 .set('Authorization', `Bearer ${token}`)
                 .send({
-                    user_email: 'jean@pomme.fr'
+                    user_email
                 })
                 .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
         });
 
-        it('should return 400 because user_email is not provide', async () => {
+        it('should return 400 because user_email is not provide', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { user_email: [ 'le mail n\'est pas un mail valide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const list_name = 'test list';
             const token = sessionFixture.session_user_jean?.token;
-            await request(app).post('/toDoList/user/add')
+
+            const response = await request(app).post('/toDoList/user/add')
                 .set('Authorization', `Bearer ${token}`)
                 .send({
-                    list_name: 'test list'
+                    list_name
                 })
                 .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
         });
 
-        it('should return 400 because list_name is empty', async () => {
+        it('should return 400 because list_name is empty', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { list_name: [ 'lastName ne peut pas être vide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jean@pomme.fr';
+            const list_name = '';
             const token = sessionFixture.session_user_jean?.token;
-            await request(app).post('/toDoList/user/add')
+
+            const response = await request(app).post('/toDoList/user/add')
                 .set('Authorization', `Bearer ${token}`)
                 .send({
-                    user_email: 'jean@pomme.fr',
-                    list_name: ''
+                    user_email,
+                    list_name
                 })
                 .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
         });
 
-        it('should return 400 because user_email is empty', async () => {
+        it('should return 400 because user_email is empty', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { user_email: [ 'le mail n\'est pas un mail valide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = '';
+            const list_name = 'test list';
             const token = sessionFixture.session_user_jean?.token;
-            await request(app).post('/toDoList/user/add')
+
+            const response = await request(app).post('/toDoList/user/add')
                 .set('Authorization', `Bearer ${token}`)
                 .send({
-                    user_email: '',
-                    list_name: 'test list'
+                    user_email,
+                    list_name
                 })
                 .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
         });
 
-        it('should return 400 because user_email is not a mail', async () => {
+        it('should return 400 because user_email is not a mail', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { user_email: [ 'le mail n\'est pas un mail valide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jeanjean';
+            const list_name = 'test list';
             const token = sessionFixture.session_user_jean?.token;
-            await request(app).post('/toDoList/user/add')
+
+            const response = await request(app).post('/toDoList/user/add')
                 .set('Authorization', `Bearer ${token}`)
                 .send({
-                    user_email: 'jeanjean',
-                    list_name: 'test list'
+                    user_email,
+                    list_name
                 })
                 .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
         });
 
-        it('should return 400 because user_email is not a mail', async () => {
+        it('should return 400 because user_email is not a mail for a user in the database', async () =>
+        {
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jean@pommier.fr';
+            const list_name = 'test list';
             const token = sessionFixture.session_user_jean?.token;
-            await request(app).post('/toDoList/user/add')
+
+            const response = await request(app).post('/toDoList/user/add')
                 .set('Authorization', `Bearer ${token}`)
                 .send({
-                    user_email: 'jean@pommier.fr',
-                    list_name: 'test list'
+                    user_email,
+                    list_name
                 })
                 .expect(404);
+
+            expect(response.body).toEqual({});
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
         });
     })
 })
