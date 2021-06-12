@@ -68,6 +68,20 @@ export class ToDoListController
         });
     }
 
+    public async getToDoListsByUserMail(user_mail: number): Promise<ToDoListInstance[] | null>
+    {
+        return await this.toDoList.findAll({
+            attributes: ['id', 'name'],
+            include: {
+                model: this.user,
+                required: true,
+                where: {
+                    email: user_mail
+                }
+            }
+        });
+    }
+
     public async getToDoListItemsWithToDoListId(id: number): Promise<ItemInstance[] | null>
     {
         return await this.item.findAll({
