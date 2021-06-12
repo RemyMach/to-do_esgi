@@ -112,4 +112,8 @@ export class ToDoListController
             )
         })
     }
+
+    public async getAllToDoLists(): Promise<ToDoListInstance[]> {
+        return await this.toDoList.findAll();
+    }
 }
