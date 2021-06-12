@@ -36,7 +36,7 @@ describe('Determine the todo list routes behavior', () => {
         done();
     });
 
-    describe('Test the creation of a todo list to a user', async () =>
+    describe('Test the creation of a todo list to a user', () =>
     {
         it('should return 201 because all parameters are good', async () =>
         {
