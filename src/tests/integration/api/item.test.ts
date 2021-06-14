@@ -22,6 +22,8 @@ describe('Determine the item route behavior', () => {
 
     let sessionFixture: SessionFixture;
 
+    const delay = (ms: number | undefined) => new Promise(res => setTimeout(res, ms));
+
     beforeAll(async (done) => {
         userController = await UserController.getInstance();
         toDoListController = await ToDoListController.getInstance();
@@ -66,7 +68,7 @@ describe('Determine the item route behavior', () => {
                     toDoListId: null,
                     name: "Test",
                     content: "Content",
-                    createdAt: new Date()
+                    createdAt: new Date(Date.now() + 60 * 60 * 1000)
                 })
                 //test status
                 .expect(400);
@@ -85,7 +87,7 @@ describe('Determine the item route behavior', () => {
                     toDoListId: toDoListId,
                     name: "",
                     content: "Content",
-                    createdAt: new Date()
+                    createdAt: new Date(Date.now() + 60 * 60 * 1000)
                 })
                 //test status
                 .expect(400);
@@ -104,7 +106,7 @@ describe('Determine the item route behavior', () => {
                     toDoListId: toDoListId,
                     name: "Test",
                     content: "",
-                    createdAt: new Date()
+                    createdAt: new Date(Date.now() + 60 * 60 * 1000)
                 })
                 //test status
                 .expect(400);
@@ -141,7 +143,7 @@ describe('Determine the item route behavior', () => {
                     toDoListId: toDoListId,
                     name: "Test",
                     content: "Content",
-                    createdAt: new Date()
+                    createdAt: new Date(Date.now() + 60 * 60 * 1000)
                 })
                 //test status
                 .expect(201);
@@ -150,6 +152,26 @@ describe('Determine the item route behavior', () => {
             const item = await itemController.getItemById(response.body.id);
             expect(item).not.toBeNull();
             expect(itemCount ).not.toBe(await itemController.countItems());
+        });
+
+        it('should return 400 because last item isn\'t 30min old', async () => {
+            await delay(2000);
+            const token = sessionFixture.session_user_jean?.token;
+            errorParam['errors'][0]['fields'] = { createdAt: [ 'merci d\'attendre 30min entre la creation de deux notes' ]};
+            const response = await request(app).post('/item')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    toDoListId: toDoListId,
+                    name: "Test",
+                    content: "Content",
+                    createdAt: new Date()
+                })
+                //test status
+                .expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+            expect(itemCount).toBe(await itemController.countItems());
         });
 
     });

@@ -49,14 +49,14 @@ export async function validateItemCreation(req: express.Request, res: express.Re
         let latestItemId: number = 0;
 
         for (let i = 0; i < allItems.length; i++) {
-            if (allItems[latestItemId].createdAt.getTime() > allItems[i].createdAt.getTime()) {
+            if (allItems[latestItemId].createdAt.getTime() < allItems[i].createdAt.getTime()) {
                 latestItemId = i;
             }
         }
 
         lastItem = new ItemModel(allItems[latestItemId].id, allItems[latestItemId].name, allItems[latestItemId].createdAt, allItems[latestItemId].content);
     }
-    if(!itemValidatorService.isCreatedDateValid(creationDate) || (allItems !== null && dateService.isItemCreationDateStamped(lastItem!, newItem))) {
+    if(lastItem != null && !dateService.isItemCreationDateStamped(lastItem!, newItem)) {
         res.locals.errors = {};
         res.locals.errors.createdAt = {
             location: 'body',

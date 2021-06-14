@@ -8,8 +8,8 @@ export class DateService {
     }
 
     isItemCreationDateStamped(lastItem: ItemModel, newItem: ItemModel): boolean {
-        const lastItemCreationDate = lastItem.createdAt;
+        const lastItemCreationDate = new Date(lastItem.createdAt.getTime() + 30 * 60 * 1000);
         const newItemCreationDate = newItem.createdAt;
-        return (new Date(lastItemCreationDate.getTime() + 30 * 60 * 1000)).getTime() < newItemCreationDate.getTime();
+        return lastItemCreationDate.getTime() < newItemCreationDate.getTime();
     }
 }
