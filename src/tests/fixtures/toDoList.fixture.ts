@@ -6,6 +6,7 @@ import {UserFixture} from "./user.fixture";
 export class ToDoListFixture implements fixture
 {
     todo_list_for_user_remy?: ToDoListInstance;
+    todo_list_for_user_jean?: ToDoListInstance;
 
     private static instance: ToDoListFixture;
 
@@ -27,6 +28,12 @@ export class ToDoListFixture implements fixture
             name: "My todo list, don't touch it you son of your mom"
         });
         this.todo_list_for_user_remy.setUser(userFixture.user_remy);
+
+        this.todo_list_for_user_jean = await manager.toDoList.create({
+            id: 2,
+            name: "How to cheat on exam"
+        });
+        this.todo_list_for_user_jean.setUser(userFixture.user_jean);
     }
 
     public async destroyFieldsTable(): Promise<void> {
