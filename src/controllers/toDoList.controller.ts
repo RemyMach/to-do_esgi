@@ -48,6 +48,11 @@ export class ToDoListController
     {
         return await this.toDoList.findOne({
             attributes: ['id', 'name'],
+            include: {
+                attributes: ['email'],
+                model: this.user,
+                required: true
+            },
             where: {
                 id
             }

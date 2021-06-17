@@ -75,6 +75,75 @@ toDoListRouter.post("/user/add",
         }
     });
 
+toDoListRouter.get("/",
+    authMiddleware,
+    async function(req: Request, res: Response) {
+
+        const errors = validationResult(req).array();
+        if(res.locals.errors) {
+            errors.push(res.locals.errors.user_email);
+            errors.push(res.locals.errors.list_name);
+        }
+
+        if (errors.length > 0) {
+            throw new InvalidInput(errors);
+        }
+
+        const list_id = req.query.list_id ? Number.parseInt(req.query.list_id as string) : undefined;
+        const user_email = req.query.user_email ? req.query.user_email as string : undefined;
+
+        if (list_id === undefined || user_email === undefined) {
+            res.status(403).end();
+            return;
+        }
+
+        const userController = await UserController.getInstance();
+        const toDoListController = await ToDoListController.getInstance();
+        try{
+            const user = await userController.getUserByEmail(user_email);
+            if(user === null){
+                return res.status(404)
+                    .end();
+            }
+
+            const toDoList = await toDoListController.getToDoListById(list_id);
+            if(toDoList === null){
+                return res.status(404)
+                    .end();
+            }
+
+            const json = JSON.parse(JSON.stringify(toDoList));
+            if(json.User.email !== user_email){
+                return res.status(403)
+                    .end();
+            }
+
+            return res.status(200)
+                .json({toDoList})
+                .end();
+
+        }
+        catch(validationError) {
+            if(validationError instanceof ValidationError) {
+                errors.push({
+                    location: 'body',
+                    value: req.body.email,
+                    param: 'email',
+                    msg: validationError.message,
+                });
+            }
+            else {
+                errors.push({
+                    location: 'body',
+                    value: 'db',
+                    param: 'db',
+                    msg: 'db problems',
+                });
+            }
+            throw new InvalidInput(errors);
+        }
+    });
+
 export {
     toDoListRouter
 };
