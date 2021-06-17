@@ -196,7 +196,7 @@ describe('Determine the todo list routes behavior', () => {
             expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
         });
 
-        it('should return 400 because user_email is not a mail for a user in the database', async () =>
+        it('should return 400 because user_email is not a mail of a user in the database', async () =>
         {
             const toDoLists = await toDoListController.getAllToDoLists();
             const numberOfToDoLists = toDoLists.length;
@@ -221,7 +221,7 @@ describe('Determine the todo list routes behavior', () => {
 
     describe('Test to getting a todo list for a user', () =>
     {
-        it('should return 201 because all parameters are good and the user is the owner of the list', async () =>
+        it('should return 200 because all parameters are good and the user is the owner of the list', async () =>
         {
             const validParam = {
                 toDoList: {
@@ -243,6 +243,74 @@ describe('Determine the todo list routes behavior', () => {
                 .expect(200);
 
             expect(response.body).toEqual(validParam);
+        });
+
+        it('should return 403 because the user isn\' the owner of the list', async () =>
+        {
+            const user_email = 'jean@pomme.fr';
+            const list_id = 2;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send()
+                .expect(403);
+
+            expect(response.body).toEqual({});
+        });
+
+        it('should return 404 because user_email is not a mail for a user in the database', async () =>
+        {
+            const user_email = 'jeanjean';
+            const list_id = 1;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send()
+                .expect(404);
+
+            expect(response.body).toEqual({});
+        });
+
+        it('should return 404 because list with this ID didn\'t exist in the database', async () =>
+        {
+            const user_email = 'jean@pomme.fr';
+            const list_id = 1_000_000;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send()
+                .expect(404);
+
+            expect(response.body).toEqual({});
+        });
+
+        it('should return 400 because user_email isn\'t provided', async () =>
+        {
+            const list_id = 1;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).get(`/toDoList/?user_email=&list_id=${list_id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send()
+                .expect(400);
+
+            expect(response.body).toEqual({});
+        });
+
+        it('should return 400 because list_id isn\'t provided', async () =>
+        {
+            const user_email = 'jean@pomme.fr';
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=`)
+                .set('Authorization', `Bearer ${token}`)
+                .send()
+                .expect(400);
+
+            expect(response.body).toEqual({});
         });
     });
 })
