@@ -93,7 +93,7 @@ toDoListRouter.get("/",
         const user_email = req.query.user_email ? req.query.user_email as string : undefined;
 
         if (list_id === undefined || user_email === undefined) {
-            res.status(403).end();
+            res.status(400).end();
             return;
         }
 
