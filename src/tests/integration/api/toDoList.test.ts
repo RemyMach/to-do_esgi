@@ -335,6 +335,7 @@ describe('Determine the todo list routes behavior', () => {
             expect(response.body).toEqual({});
 
             expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists - 1);
+            expect(await toDoListController.getToDoListItemsWithToDoListId(list_id)).toHaveLength(0);
         });
     });
 })

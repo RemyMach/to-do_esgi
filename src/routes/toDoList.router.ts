@@ -5,6 +5,7 @@ import {ValidationError} from "sequelize";
 import {UserController} from "../controllers/user.controller";
 import {ToDoListController} from "../controllers/toDoList.controller";
 import {authMiddleware} from "../middlewares/auth.middleware";
+import {ItemController} from "../controllers/item.controller";
 
 const toDoListRouter = express.Router();
 
@@ -191,11 +192,16 @@ toDoListRouter.delete("/",
                     .end();
             }
 
-            await toDoListController.deleteToDoListById(list_id)
+            const items = await toDoListController.getToDoListItemsWithToDoListId(list_id);
+            const itemController = await ItemController.getInstance();
+
+            for (const item of JSON.parse(JSON.stringify(items))) {
+                await itemController.deleteItem(item.id);
+            }
+            await toDoListController.deleteToDoListById(list_id);
 
             return res.status(200)
                 .end();
-
         }
         catch(validationError) {
             if(validationError instanceof ValidationError) {

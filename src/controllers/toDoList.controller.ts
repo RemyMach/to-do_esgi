@@ -87,7 +87,7 @@ export class ToDoListController
         });
     }
 
-    public async getToDoListItemsWithToDoListId(id: number): Promise<ItemInstance[] | null>
+    public async getToDoListItemsWithToDoListId(list_id: number): Promise<ItemInstance[] | null>
     {
         return await this.item.findAll({
             attributes: ['id', 'name', 'content'],
@@ -95,7 +95,7 @@ export class ToDoListController
                 model: this.toDoList,
                 required: true,
                 where: {
-                    user: id
+                    id: list_id
                 }
             }
         });
