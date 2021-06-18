@@ -1,6 +1,6 @@
 import {ModelCtor} from "sequelize";
-import {ItemInstance, ItemCreationProps} from "../models/item.model";
-import {ToDoListController} from "../controllers/toDoList.controller";
+import {ItemInstance} from "../models/item.model";
+import {ToDoListController} from "./toDoList.controller";
 import {SequelizeManager} from "../models";
 
 export class ItemController {
@@ -29,6 +29,10 @@ export class ItemController {
                 id
             }
         });
+    }
+
+    public async getAllItems(): Promise<ItemInstance[]> {
+        return await this.item.findAll();
     }
 
     public async createItem(toDoListId: number, name: string, content: string, createdAt: Date): Promise<ItemInstance | null> {
