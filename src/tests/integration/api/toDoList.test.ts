@@ -299,7 +299,7 @@ describe('Determine the todo list routes behavior', () => {
             const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
-                .expect(404);
+                .expect(400);
 
             expect(response.body).toEqual({});
         });
