@@ -219,7 +219,7 @@ describe('Determine the todo list routes behavior', () => {
         });
     });
 
-    describe('Test to getting a todo list for a user', () =>
+    describe('Test to getting a todo list', () =>
     {
         it('should return 200 because all parameters are good and the user is the owner of the list', async () =>
         {
@@ -311,6 +311,30 @@ describe('Determine the todo list routes behavior', () => {
                 .expect(400);
 
             expect(response.body).toEqual({});
+        });
+    });
+
+    describe('Test to delete a todo list', () => {
+        it('should return 200 because all parameters are good and the user is the owner of the list', async () =>
+        {
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jean@pomme.fr';
+            const list_id = 1;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).delete(`/toDoList/`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    user_email,
+                    list_id
+                })
+                .expect(200);
+
+            expect(response.body).toEqual({});
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists - 1);
         });
     });
 })

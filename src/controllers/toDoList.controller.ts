@@ -121,4 +121,13 @@ export class ToDoListController
     public async getAllToDoLists(): Promise<ToDoListInstance[]> {
         return await this.toDoList.findAll();
     }
+
+    async deleteToDoListById(list_id: number): Promise<void>
+    {
+        await this.toDoList.destroy({
+            where: {
+                id: list_id
+            }
+        });
+    }
 }

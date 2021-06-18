@@ -144,6 +144,80 @@ toDoListRouter.get("/",
         }
     });
 
+toDoListRouter.delete("/",
+    authMiddleware,
+    [
+        body('user_email')
+            .isEmail()
+            .withMessage('le mail n\'est pas un mail valide')
+            .normalizeEmail(),
+        body('list_id')
+            .trim()
+            .isNumeric()
+            .withMessage('list_id ne peut pas être vide')
+    ],
+    async function(req: Request, res: Response) {
+
+        const errors = validationResult(req).array();
+        if(res.locals.errors) {
+            errors.push(res.locals.errors.user_email);
+            errors.push(res.locals.errors.list_name);
+        }
+
+        const {user_email, list_id} = req.body;
+
+        if (errors.length > 0) {
+            throw new InvalidInput(errors);
+        }
+
+        const userController = await UserController.getInstance();
+        const toDoListController = await ToDoListController.getInstance();
+        try{
+            const user = await userController.getUserByEmail(user_email);
+            if(user === null){
+                return res.status(404)
+                    .end();
+            }
+
+            const toDoList = await toDoListController.getToDoListById(list_id);
+            if(toDoList === null){
+                return res.status(404)
+                    .end();
+            }
+
+            const json = JSON.parse(JSON.stringify(toDoList));
+            if(json.User.email !== user_email){
+                return res.status(403)
+                    .end();
+            }
+
+            await toDoListController.deleteToDoListById(list_id)
+
+            return res.status(200)
+                .end();
+
+        }
+        catch(validationError) {
+            if(validationError instanceof ValidationError) {
+                errors.push({
+                    location: 'body',
+                    value: req.body.email,
+                    param: 'email',
+                    msg: validationError.message,
+                });
+            }
+            else {
+                errors.push({
+                    location: 'body',
+                    value: 'db',
+                    param: 'db',
+                    msg: 'db problems',
+                });
+            }
+            throw new InvalidInput(errors);
+        }
+    });
+
 export {
     toDoListRouter
 };
