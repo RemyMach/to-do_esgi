@@ -7,6 +7,7 @@ export class ItemFixture implements fixture{
 
     item_1?: ItemInstance;
     item_2?: ItemInstance;
+    item_3?: ItemInstance;
 
     private static instance: ItemFixture;
 
@@ -37,6 +38,13 @@ export class ItemFixture implements fixture{
             createdAt: new Date()
         });
         this.item_2.setToDoList(toDoListFixture.todo_list_for_user_remy);
+
+        this.item_2 = await manager.item.create({
+            name: "work",
+            content: "Et ouais",
+            createdAt: new Date()
+        });
+        this.item_2.setToDoList(toDoListFixture.todo_list_for_user_jean);
     }
 
     public async destroyFieldsTable(): Promise<void> {
