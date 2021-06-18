@@ -5,6 +5,7 @@ import app from "../../../app";
 import request from "supertest";
 import {SessionFixture} from "../../fixtures/session.fixture";
 import {SessionController} from "../../../controllers/session.controller";
+import {ItemController} from "../../../controllers/item.controller";
 
 describe('Determine the todo list routes behavior', () => {
 
@@ -13,6 +14,7 @@ describe('Determine the todo list routes behavior', () => {
     let toDoListController: ToDoListController;
     let sessionFixture: SessionFixture;
     let sessionController: SessionController;
+    let itemController: ItemController;
 
     beforeAll(async (done) => {
         errorParam = {
@@ -21,6 +23,7 @@ describe('Determine the todo list routes behavior', () => {
         userController = await UserController.getInstance();
         toDoListController = await ToDoListController.getInstance();
         sessionController = await SessionController.getInstance();
+        itemController = await ItemController.getInstance();
         done();
     });
 
@@ -287,6 +290,20 @@ describe('Determine the todo list routes behavior', () => {
             expect(response.body).toEqual({});
         });
 
+        it('should return 400 because list with this ID isn\'t a number', async () =>
+        {
+            const user_email = 'jean@pomme.fr';
+            const list_id = "Aux armes soldat";
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .send()
+                .expect(404);
+
+            expect(response.body).toEqual({});
+        });
+
         it('should return 400 because user_email isn\'t provided', async () =>
         {
             const list_id = 1;
@@ -336,6 +353,235 @@ describe('Determine the todo list routes behavior', () => {
 
             expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists - 1);
             expect(await toDoListController.getToDoListItemsWithToDoListId(list_id)).toHaveLength(0);
+        });
+
+        it('should return 403 because the user isn\'t the owner of the list', async () =>
+        {
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jean@pomme.fr';
+            const list_id = 2;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const toDoListItems = await toDoListController.getToDoListItemsWithToDoListId(list_id);
+            let numberOfToDoListItems = 0;
+            if(toDoListItems !== null){
+                numberOfToDoListItems = toDoListItems.length
+            }
+
+            const response = await request(app).delete(`/toDoList/`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    user_email,
+                    list_id
+                })
+                .expect(403);
+
+            expect(response.body).toEqual({});
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
+            expect(await toDoListController.getToDoListItemsWithToDoListId(list_id)).toHaveLength(numberOfToDoListItems);
+        });
+
+        it('should return 400 because the user email is not a mail', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { user_email: [ 'le mail n\'est pas un mail valide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jeanjean';
+            const list_id = 2;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const toDoListItems = await toDoListController.getToDoListItemsWithToDoListId(list_id);
+            let numberOfToDoListItems = 0;
+            if(toDoListItems !== null){
+                numberOfToDoListItems = toDoListItems.length
+            }
+
+            const response = await request(app).delete(`/toDoList/`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    user_email,
+                    list_id
+                })
+                .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
+            expect(await toDoListController.getToDoListItemsWithToDoListId(list_id)).toHaveLength(numberOfToDoListItems);
+        });
+
+        it('should return 400 because the user email is empty', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { user_email: [ 'le mail n\'est pas un mail valide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = '';
+            const list_id = 2;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const toDoListItems = await toDoListController.getToDoListItemsWithToDoListId(list_id);
+            let numberOfToDoListItems = 0;
+            if(toDoListItems !== null){
+                numberOfToDoListItems = toDoListItems.length
+            }
+
+            const response = await request(app).delete(`/toDoList/`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    user_email,
+                    list_id
+                })
+                .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
+            expect(await toDoListController.getToDoListItemsWithToDoListId(list_id)).toHaveLength(numberOfToDoListItems);
+        });
+
+        it('should return 404 because the user email is not in the database', async () =>
+        {
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const user_email = 'jean@pommier.fr';
+            const list_id = 2;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const toDoListItems = await toDoListController.getToDoListItemsWithToDoListId(list_id);
+            let numberOfToDoListItems = 0;
+            if(toDoListItems !== null){
+                numberOfToDoListItems = toDoListItems.length
+            }
+
+            const response = await request(app).delete(`/toDoList/`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    user_email,
+                    list_id
+                })
+                .expect(404);
+
+            expect(response.body).toEqual({});
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
+            expect(await toDoListController.getToDoListItemsWithToDoListId(list_id)).toHaveLength(numberOfToDoListItems);
+        });
+
+        it('should return 400 because the user email isn\'t provided', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { user_email: [ 'le mail n\'est pas un mail valide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const list_id = 2;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const toDoListItems = await toDoListController.getToDoListItemsWithToDoListId(list_id);
+            let numberOfToDoListItems = 0;
+            if(toDoListItems !== null){
+                numberOfToDoListItems = toDoListItems.length
+            }
+
+            const response = await request(app).delete(`/toDoList/`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    list_id
+                })
+                .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
+            expect(await toDoListController.getToDoListItemsWithToDoListId(list_id)).toHaveLength(numberOfToDoListItems);
+        });
+
+        it('should return 400 because the list id isn\'t provided', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { list_id: [ 'list_id n\'est pas valide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const toDoListItems = await itemController.getAllItems();
+            let numberOfToDoListItems = toDoListItems.length;
+
+            const user_email = 'jean@pomme.fr';
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).delete(`/toDoList/`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    user_email
+                })
+                .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
+            expect(await itemController.getAllItems()).toHaveLength(numberOfToDoListItems);
+        });
+
+        it('should return 400 because the list id isn\'t a number', async () =>
+        {
+            errorParam['errors'][0]['fields'] = { list_id: [ 'list_id n\'est pas valide' ] };
+
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const toDoListItems = await itemController.getAllItems();
+            let numberOfToDoListItems = toDoListItems.length;
+
+            const user_email = 'jean@pomme.fr';
+            const list_id = 'Alpha Bravo Charlie';
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).delete(`/toDoList/`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    user_email,
+                    list_id
+                })
+                .expect(400);
+
+            expect(response.body).toEqual(errorParam);
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
+            expect(await itemController.getAllItems()).toHaveLength(numberOfToDoListItems);
+        });
+
+        it('should return 404 because the list id didn\'t exist in the database', async () =>
+        {
+            const toDoLists = await toDoListController.getAllToDoLists();
+            const numberOfToDoLists = toDoLists.length;
+
+            const toDoListItems = await itemController.getAllItems();
+            let numberOfToDoListItems = toDoListItems.length;
+
+            const user_email = 'jean@pomme.fr';
+            const list_id = 100_000_000;
+            const token = sessionFixture.session_user_jean?.token;
+
+            const response = await request(app).delete(`/toDoList/`)
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    user_email,
+                    list_id
+                })
+                .expect(404);
+
+            expect(response.body).toEqual({});
+
+            expect(await toDoListController.getAllToDoLists()).toHaveLength(numberOfToDoLists);
+            expect(await itemController.getAllItems()).toHaveLength(numberOfToDoListItems);
         });
     });
 })
