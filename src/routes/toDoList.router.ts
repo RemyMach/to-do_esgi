@@ -79,17 +79,6 @@ toDoListRouter.post("/user/add",
 toDoListRouter.get("/",
     authMiddleware,
     async function(req: Request, res: Response) {
-
-        const errors = validationResult(req).array();
-        if(res.locals.errors) {
-            errors.push(res.locals.errors.user_email);
-            errors.push(res.locals.errors.list_name);
-        }
-
-        if (errors.length > 0) {
-            throw new InvalidInput(errors);
-        }
-
         const list_id = req.query.list_id ? Number.parseInt(req.query.list_id as string) : undefined;
         const user_email = req.query.user_email ? req.query.user_email as string : undefined;
 
@@ -125,23 +114,8 @@ toDoListRouter.get("/",
 
         }
         catch(validationError) {
-            if(validationError instanceof ValidationError) {
-                errors.push({
-                    location: 'body',
-                    value: req.body.email,
-                    param: 'email',
-                    msg: validationError.message,
-                });
-            }
-            else {
-                errors.push({
-                    location: 'body',
-                    value: 'db',
-                    param: 'db',
-                    msg: 'db problems',
-                });
-            }
-            throw new InvalidInput(errors);
+            return res.status(400)
+                .end();
         }
     });
 
