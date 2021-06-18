@@ -155,7 +155,7 @@ toDoListRouter.delete("/",
         body('list_id')
             .trim()
             .isNumeric()
-            .withMessage('list_id ne peut pas être vide')
+            .withMessage('list_id n\'est pas valide')
     ],
     async function(req: Request, res: Response) {
 
