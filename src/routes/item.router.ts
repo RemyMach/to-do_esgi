@@ -1,10 +1,10 @@
 import express, {NextFunction, Request, Response} from "express";
 import {ItemController} from "../controllers/item.controller";
-import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
 import {authMiddleware} from "../middlewares/auth.middleware";
 import InvalidInput from "../errors/invalid-input";
 import {validateItemCreation} from "../middlewares/item.middleware";
+import 'express-async-errors';
 import {ValidationError} from "sequelize";
 
 const itemRouter = express.Router();
@@ -44,9 +44,9 @@ itemRouter.post("/",[
             .trim()
             .isLength({ min: 1, max: 1000 })
             .withMessage('le champs content doit contenir un minimum de 1 caractères et un maximum de 1000 caractères'),
-        validateItemCreation
+        validateItemCreation,
+        authMiddleware
     ],
-    authMiddleware,
     async function(req: Request, res: Response) {
 
         const errors = validationResult(req).array();
@@ -64,7 +64,6 @@ itemRouter.post("/",[
                 errors.push(res.locals.errors.createdAt);
             }
         }
-
         if (errors.length > 0) {
             throw new InvalidInput(errors);
         }
@@ -79,7 +78,6 @@ itemRouter.post("/",[
                 content,
                 createdAt
             );
-
 
             if (item != null) {
                 return res.status(201)

@@ -15,6 +15,9 @@ export async function validateItemCreation(req: express.Request, res: express.Re
     const content = req.body.content;
     const creationDate = parseISO(req.body.createdAt);
     const dateService = new DateService();
+    if (isNaN(Number.parseInt(toDoListId))) {
+        return next();
+    }
 
     if(!isValid(creationDate)) {
         res.locals.errors = {};
@@ -24,8 +27,9 @@ export async function validateItemCreation(req: express.Request, res: express.Re
             param: 'createdAt',
             msg: 'le paramètre createdAt ne peut pas être manquant',
         };
-        next();
+        return next();
     }else if (!itemValidatorService.isToDoListIdValid(toDoListId)) {
+
         res.locals.errors = {};
         res.locals.errors.toDoListId = {
             location: 'body',
@@ -33,12 +37,9 @@ export async function validateItemCreation(req: express.Request, res: express.Re
             param: 'toDoListId',
             msg: 'le paramètre toDoListId ne peux pas être manquant',
         };
-        next();
+        return next();
     }
 
-    if (isNaN(Number.parseInt(toDoListId))) {
-        next();
-    }
 
     const newItem = new ItemModel(0, name, creationDate, content);
     const toDoListController = await ToDoListController.getInstance();
@@ -64,8 +65,8 @@ export async function validateItemCreation(req: express.Request, res: express.Re
             param: 'createdAt',
             msg: 'merci d\'attendre 30min entre la creation de deux notes',
         };
-        next();
+        return next();
     }else {
-        next();
+        return next();
     }
 }

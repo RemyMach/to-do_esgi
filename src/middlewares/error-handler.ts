@@ -11,7 +11,7 @@ const errorHandler = (
         return res.status(err.getStatusCode()).send(err.serializeErrorOutput());
     }
     console.log(err);
-    return res.status(500);
+    return res.status(500).end();
 };
 
 export default errorHandler;
