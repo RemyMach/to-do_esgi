@@ -574,6 +574,7 @@ describe('Determine the auth routes behavior', () => {
             //test the session doesn't exist anymore
             if(token !== undefined)
                 expect(await authController.getSession(token)).toEqual(null);
+
         });
     });
 });

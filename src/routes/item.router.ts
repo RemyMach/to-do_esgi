@@ -2,13 +2,14 @@ import express, {NextFunction, Request, Response} from "express";
 import {ItemController} from "../controllers/item.controller";
 import 'express-async-errors';
 import { body, validationResult } from 'express-validator';
+import {authMiddleware} from "../middlewares/auth.middleware";
 import InvalidInput from "../errors/invalid-input";
 import {validateItemCreation} from "../middlewares/item.middleware";
 import {ValidationError} from "sequelize";
 
 const itemRouter = express.Router();
 
-itemRouter.get("/:id", async function(req: Request, res: Response) {
+itemRouter.get("/:id", authMiddleware, async function(req: Request, res: Response) {
         const id = req.params.id ? Number.parseInt(req.params.id as string) : undefined;
 
         if (id == undefined || isNaN(id)) {
@@ -45,6 +46,7 @@ itemRouter.post("/",[
             .withMessage('le champs content doit contenir un minimum de 1 caractères et un maximum de 1000 caractères'),
         validateItemCreation
     ],
+    authMiddleware,
     async function(req: Request, res: Response) {
 
         const errors = validationResult(req).array();
@@ -101,7 +103,7 @@ itemRouter.post("/",[
     }
 );
 
-itemRouter.delete("/:id", async function(req: Request, res: Response) {
+itemRouter.delete("/:id", authMiddleware, async function(req: Request, res: Response) {
         const id = req.params.id ? Number.parseInt(req.params.id as string) : undefined;
 
         if (id === undefined || isNaN(id)) {
