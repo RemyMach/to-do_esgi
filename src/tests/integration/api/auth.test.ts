@@ -272,6 +272,29 @@ describe('Determine the auth routes behavior', () => {
             expect(user).not.toBeNull();
         });
 
+
+        it('should return 400 beacause the mail is not a valid email', async () => {
+            errorParam['errors'][0]['fields'] = { email: [ "le mail n'est pas un mail valide" ]  };
+
+            const response = await request(app).post('/auth/subscribe')
+                .send({
+                    firstName: "remy",
+                    lastName: "pomme",
+                    email: 'jean',
+                    password: "azertyuiop",
+                    birthDate: birthDateValid
+                }).expect(400);
+
+            //test return body
+            expect(response.body).toEqual(errorParam);
+
+            //test user always in the db
+            const user = await userController.getUserByEmail('jean@pomme.fr');
+            expect(user).not.toBeNull();
+        });
+
+
+
         it('should return 200 because all parameters are good', async () => {
             const validParam = {
                     "firstName": "remy",

@@ -11,10 +11,8 @@ const itemRouter = express.Router();
 
 itemRouter.get("/:id", authMiddleware, async function(req: Request, res: Response) {
         const id = req.params.id ? Number.parseInt(req.params.id as string) : undefined;
-
-        if (id == undefined || isNaN(id)) {
-            return res.status(400)
-                .end();
+        if (id === undefined || isNaN(id) || id === null) {
+            return res.status(400).end();
         }
 
         const itemController = await ItemController.getInstance();

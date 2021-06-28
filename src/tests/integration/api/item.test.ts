@@ -8,6 +8,7 @@ import {ToDoListInstance} from "../../../models/toDoList.model";
 import {UserInstance} from "../../../models/user.model";
 import {destroyTablesElement, fillTables} from "../../fixtures";
 import {SessionFixture} from "../../fixtures/session.fixture";
+import {SessionController} from "../../../controllers/session.controller";
 
 describe('Determine the item route behavior', () => {
 
@@ -16,6 +17,7 @@ describe('Determine the item route behavior', () => {
 
     let userController: UserController;
     let toDoListController: ToDoListController;
+    let sessionController: SessionController;
 
     let user: UserInstance;
     let toDoListId: number;
@@ -51,12 +53,50 @@ describe('Determine the item route behavior', () => {
 
         beforeAll(async (done) => {
             itemController = await ItemController.getInstance();
+            sessionController = await SessionController.getInstance();
             done();
         });
 
         beforeEach(async (done) => {
             itemCount = await itemController.countItems();
             done();
+        });
+
+        it('should return 401 because the user doesn\'t fill any header', async () => {
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).delete('/auth/logout')
+                .send()
+                //test status
+                .expect(401);
+
+            //test return body
+            expect(response.body).toEqual({});
+
+            //test session table have the same number of element
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 403 because the header for authorization is bad', async () => {
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).delete('/auth/logout')
+                .set('Authorization', `ffsdfsfsdfsd`)
+                .send()
+                //test status
+                .expect(403);
+
+            //test return body
+            expect(response.body).toEqual({});
+
+            //test session table have the same number of element
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
         });
 
         it('should return 400 because toDoListId is null', async () => {
@@ -182,10 +222,48 @@ describe('Determine the item route behavior', () => {
 
         beforeAll(async (done) => {
             itemController = await ItemController.getInstance();
+            sessionController = await SessionController.getInstance();
             done();
         });
 
-        it('should return 404 because no item id are provided', async () => {
+        it('should return 401 because the user doesn\'t fill any header', async () => {
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).delete('/auth/logout')
+                .send()
+                //test status
+                .expect(401);
+
+            //test return body
+            expect(response.body).toEqual({});
+
+            //test session table have the same number of element
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 403 because the header for authorization is bad', async () => {
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).delete('/auth/logout')
+                .set('Authorization', `ffsdfsfsdfsd`)
+                .send()
+                //test status
+                .expect(403);
+
+            //test return body
+            expect(response.body).toEqual({});
+
+            //test session table have the same number of element
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 404 because no item id are provided so the route doesn\'t exist', async () => {
             const token = sessionFixture.session_user_jean?.token;
             const response = await request(app).get('/item/').send()
                 .set('Authorization', `Bearer ${token}`)
@@ -229,6 +307,7 @@ describe('Determine the item route behavior', () => {
 
         beforeAll(async (done) => {
             itemController = await ItemController.getInstance();
+            sessionController = await SessionController.getInstance();
             done();
         });
 
@@ -237,7 +316,44 @@ describe('Determine the item route behavior', () => {
             done();
         });
 
-        it('should return 404 because no item id are provided', async () => {
+        it('should return 401 because the user doesn\'t fill any header', async () => {
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).delete('/auth/logout')
+                .send()
+                //test status
+                .expect(401);
+
+            //test return body
+            expect(response.body).toEqual({});
+
+            //test session table have the same number of element
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 403 because the header for authorization is bad', async () => {
+
+            const sessions = await sessionController.getAllSessions();
+            const numberSessions = sessions.length;
+
+            const response = await request(app).delete('/auth/logout')
+                .set('Authorization', `ffsdfsfsdfsd`)
+                .send()
+                //test status
+                .expect(403);
+
+            //test return body
+            expect(response.body).toEqual({});
+
+            //test session table have the same number of element
+            expect(await sessionController.getAllSessions()).toHaveLength(numberSessions);
+
+        });
+
+        it('should return 404 because no item id are provided so the route doesn\'t exist', async () => {
             const token = sessionFixture.session_user_jean?.token;
             const response = await request(app).delete('/item/').send()
                 .set('Authorization', `Bearer ${token}`)
