@@ -40,13 +40,13 @@ toDoListRouter.post("/user/add",
         try{
             const user = await userController.getUserByEmail(user_email);
             if(user === null){
-                return res.status(404)
+                return res.status(400)
                     .end();
             }
 
             const toDoList = await toDoListController.addToDoListToUser(user, list_name);
             if(toDoList === null){
-                return res.status(404)
+                return res.status(400)
                     .end();
             }
 
@@ -92,13 +92,13 @@ toDoListRouter.get("/",
         try{
             const user = await userController.getUserByEmail(user_email);
             if(user === null){
-                return res.status(404)
+                return res.status(400)
                     .end();
             }
 
             const toDoList = await toDoListController.getToDoListById(list_id);
             if(toDoList === null){
-                return res.status(404)
+                return res.status(400)
                     .end();
             }
 
@@ -150,13 +150,13 @@ toDoListRouter.delete("/",
         try{
             const user = await userController.getUserByEmail(user_email);
             if(user === null){
-                return res.status(404)
+                return res.status(400)
                     .end();
             }
 
             const toDoList = await toDoListController.getToDoListById(list_id);
             if(toDoList === null){
-                return res.status(404)
+                return res.status(400)
                     .end();
             }
 
