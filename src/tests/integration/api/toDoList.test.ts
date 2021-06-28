@@ -214,7 +214,7 @@ describe('Determine the todo list routes behavior', () => {
                     user_email,
                     list_name
                 })
-                .expect(404);
+                .expect(400);
 
             expect(response.body).toEqual({});
 
@@ -262,7 +262,7 @@ describe('Determine the todo list routes behavior', () => {
             expect(response.body).toEqual({});
         });
 
-        it('should return 404 because user_email is not a mail for a user in the database', async () =>
+        it('should return 400 because user_email is not a mail for a user in the database', async () =>
         {
             const user_email = 'jeanjean';
             const list_id = 1;
@@ -271,12 +271,12 @@ describe('Determine the todo list routes behavior', () => {
             const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
-                .expect(404);
+                .expect(400);
 
             expect(response.body).toEqual({});
         });
 
-        it('should return 404 because list with this ID didn\'t exist in the database', async () =>
+        it('should return 400 because list with this ID didn\'t exist in the database', async () =>
         {
             const user_email = 'jean@pomme.fr';
             const list_id = 1_000_000;
@@ -285,7 +285,7 @@ describe('Determine the todo list routes behavior', () => {
             const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
-                .expect(404);
+                .expect(400);
 
             expect(response.body).toEqual({});
         });
@@ -446,7 +446,7 @@ describe('Determine the todo list routes behavior', () => {
             expect(await toDoListController.getToDoListItemsWithToDoListId(list_id)).toHaveLength(numberOfToDoListItems);
         });
 
-        it('should return 404 because the user email is not in the database', async () =>
+        it('should return 400 because the user email is not in the database', async () =>
         {
             const toDoLists = await toDoListController.getAllToDoLists();
             const numberOfToDoLists = toDoLists.length;
@@ -467,7 +467,7 @@ describe('Determine the todo list routes behavior', () => {
                     user_email,
                     list_id
                 })
-                .expect(404);
+                .expect(400);
 
             expect(response.body).toEqual({});
 
@@ -558,7 +558,7 @@ describe('Determine the todo list routes behavior', () => {
             expect(await itemController.getAllItems()).toHaveLength(numberOfToDoListItems);
         });
 
-        it('should return 404 because the list id didn\'t exist in the database', async () =>
+        it('should return 400 because the list id didn\'t exist in the database', async () =>
         {
             const toDoLists = await toDoListController.getAllToDoLists();
             const numberOfToDoLists = toDoLists.length;
@@ -576,7 +576,7 @@ describe('Determine the todo list routes behavior', () => {
                     user_email,
                     list_id
                 })
-                .expect(404);
+                .expect(400);
 
             expect(response.body).toEqual({});
 

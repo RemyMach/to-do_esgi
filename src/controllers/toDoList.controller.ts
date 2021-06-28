@@ -2,7 +2,7 @@ import {ModelCtor} from "sequelize";
 import {UserInstance} from "../models/user.model";
 import {SequelizeManager} from "../models";
 import {ToDoListInstance} from "../models/toDoList.model";
-import {ItemCreationProps, ItemInstance, ItemModel} from "../models/item.model";
+import {ItemCreationProps, ItemInstance} from "../models/item.model";
 
 export class ToDoListController
 {
@@ -59,34 +59,6 @@ export class ToDoListController
         });
     }
 
-    public async getToDoListsByUserId(user_id: number): Promise<ToDoListInstance[] | null>
-    {
-        return await this.toDoList.findAll({
-            attributes: ['id', 'name'],
-            include: {
-                model: this.user,
-                required: true,
-                where: {
-                    id: user_id
-                }
-            }
-        });
-    }
-
-    public async getToDoListsByUserMail(user_mail: string): Promise<ToDoListInstance[] | null>
-    {
-        return await this.toDoList.findAll({
-            attributes: ['id', 'name'],
-            include: {
-                model: this.user,
-                required: true,
-                where: {
-                    email: user_mail
-                }
-            }
-        });
-    }
-
     public async getToDoListItemsWithToDoListId(id: number): Promise<ItemInstance[] | null>
     {
         return await this.item.findAll({
@@ -99,23 +71,6 @@ export class ToDoListController
                 }
             }
         });
-    }
-
-    public async getAndConvertItemInstancesToItemModels(toDoListId: number): Promise<ItemModel[] | null>
-    {
-        const itemInstances = await this.getToDoListItemsWithToDoListId(toDoListId);
-        if(itemInstances === null){
-            return null;
-        }
-        return itemInstances.map(function (itemInstance) {
-            return new ItemModel(
-                itemInstance.id,
-                itemInstance.content,
-                itemInstance.createdAt,
-                itemInstance.name
-
-            )
-        })
     }
 
     public async getAllToDoLists(): Promise<ToDoListInstance[]> {
