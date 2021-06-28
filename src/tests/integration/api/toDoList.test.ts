@@ -240,7 +240,7 @@ describe('Determine the todo list routes behavior', () => {
             const list_id = 1;
             const token = sessionFixture.session_user_jean?.token;
 
-            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
+            const response = await request(app).get(`/toDoList?user_email=${user_email}&list_id=${list_id}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
                 .expect(200);
@@ -254,7 +254,7 @@ describe('Determine the todo list routes behavior', () => {
             const list_id = 2;
             const token = sessionFixture.session_user_jean?.token;
 
-            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
+            const response = await request(app).get(`/toDoList?user_email=${user_email}&list_id=${list_id}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
                 .expect(403);
@@ -268,7 +268,7 @@ describe('Determine the todo list routes behavior', () => {
             const list_id = 1;
             const token = sessionFixture.session_user_jean?.token;
 
-            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
+            const response = await request(app).get(`/toDoList?user_email=${user_email}&list_id=${list_id}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
                 .expect(400);
@@ -282,7 +282,7 @@ describe('Determine the todo list routes behavior', () => {
             const list_id = 1_000_000;
             const token = sessionFixture.session_user_jean?.token;
 
-            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
+            const response = await request(app).get(`/toDoList?user_email=${user_email}&list_id=${list_id}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
                 .expect(400);
@@ -296,7 +296,7 @@ describe('Determine the todo list routes behavior', () => {
             const list_id = "Aux armes soldat";
             const token = sessionFixture.session_user_jean?.token;
 
-            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=${list_id}`)
+            const response = await request(app).get(`/toDoList?user_email=${user_email}&list_id=${list_id}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
                 .expect(400);
@@ -309,7 +309,7 @@ describe('Determine the todo list routes behavior', () => {
             const list_id = 1;
             const token = sessionFixture.session_user_jean?.token;
 
-            const response = await request(app).get(`/toDoList/?user_email=&list_id=${list_id}`)
+            const response = await request(app).get(`/toDoList?user_email=&list_id=${list_id}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
                 .expect(400);
@@ -322,7 +322,7 @@ describe('Determine the todo list routes behavior', () => {
             const user_email = 'jean@pomme.fr';
             const token = sessionFixture.session_user_jean?.token;
 
-            const response = await request(app).get(`/toDoList/?user_email=${user_email}&list_id=`)
+            const response = await request(app).get(`/toDoList?user_email=${user_email}&list_id=`)
                 .set('Authorization', `Bearer ${token}`)
                 .send()
                 .expect(400);
